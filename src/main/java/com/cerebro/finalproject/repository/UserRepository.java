@@ -15,10 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
-    // Fetch user with student classes eagerly loaded
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.studentClasses WHERE u.id = :id")
-    Optional<User> findByIdWithStudentClasses(@Param("id") Long id);
-
     // Fetch user with teacher classes eagerly loaded
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.teacherClasses WHERE u.id = :id")
     Optional<User> findByIdWithTeacherClasses(@Param("id") Long id);

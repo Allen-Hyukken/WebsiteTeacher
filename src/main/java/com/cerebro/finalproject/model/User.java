@@ -1,6 +1,5 @@
 package com.cerebro.finalproject.model;
 
-
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,11 +28,8 @@ public class User {
     @OneToMany(mappedBy = "teacher")
     private Set<Classroom> teacherClasses = new HashSet<>();
 
-    @ManyToMany(mappedBy = "students")
-    private Set<Classroom> studentClasses = new HashSet<>();
-
     public enum Role {
-        TEACHER, STUDENT
+        TEACHER
     }
 
     // Constructors
@@ -93,13 +89,5 @@ public class User {
 
     public void setTeacherClasses(Set<Classroom> teacherClasses) {
         this.teacherClasses = teacherClasses;
-    }
-
-    public Set<Classroom> getStudentClasses() {
-        return studentClasses;
-    }
-
-    public void setStudentClasses(Set<Classroom> studentClasses) {
-        this.studentClasses = studentClasses;
     }
 }

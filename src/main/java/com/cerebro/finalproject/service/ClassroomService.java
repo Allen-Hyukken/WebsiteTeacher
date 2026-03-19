@@ -29,38 +29,30 @@ public class ClassroomService {
         classroom.setTeacher(teacher);
         classroom.setCode(generateUniqueCode());
 
-        // Handle banner upload
         if (banner != null && !banner.isEmpty()) {
             try {
                 classroom.setBannerImage(banner.getBytes());
                 classroom.setBannerContentType(banner.getContentType());
             } catch (IOException e) {
                 e.printStackTrace();
-                // If upload fails, set default banner
                 setDefaultBanner(classroom);
             }
         } else {
-            // No banner uploaded, set default
             setDefaultBanner(classroom);
         }
 
         return classroomRepository.save(classroom);
     }
 
-    /**
-     * Sets the default banner image from resources
-     */
     private void setDefaultBanner(Classroom classroom) {
         try {
             ClassPathResource defaultBanner = new ClassPathResource(DEFAULT_BANNER_PATH);
             InputStream inputStream = defaultBanner.getInputStream();
             byte[] defaultImageBytes = StreamUtils.copyToByteArray(inputStream);
-
             classroom.setBannerImage(defaultImageBytes);
             classroom.setBannerContentType("image/jpeg");
         } catch (IOException e) {
             e.printStackTrace();
-            // If even default fails, leave null (will be handled in view)
         }
     }
 
@@ -68,21 +60,8 @@ public class ClassroomService {
         return classroomRepository.findById(id);
     }
 
-    public Optional<Classroom> findByCode(String code) {
-        return classroomRepository.findByCode(code);
-    }
-
     public List<Classroom> findByTeacherId(Long teacherId) {
         return classroomRepository.findByTeacherId(teacherId);
-    }
-
-    public Classroom addStudentToClass(Classroom classroom, User student) {
-        classroom.getStudents().add(student);
-        return classroomRepository.save(classroom);
-    }
-
-    public boolean isStudentInClass(Classroom classroom, User student) {
-        return classroom.getStudents().contains(student);
     }
 
     private String generateUniqueCode() {
@@ -97,11 +76,9 @@ public class ClassroomService {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         StringBuilder code = new StringBuilder();
-
         for (int i = 0; i < length; i++) {
             code.append(chars.charAt(random.nextInt(chars.length())));
         }
-
         return code.toString();
     }
 }

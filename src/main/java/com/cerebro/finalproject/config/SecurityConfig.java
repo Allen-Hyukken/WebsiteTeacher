@@ -43,9 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/", "/register", "/css/**", "/js/**", "/images/**",
                                 "/plugins/**", "/assets/**", "/uploads/**",
                                 "/static/**", "/webjars/**", "/favicon.ico",
-                                "/classroom/*/banner").permitAll()  // ADD THIS LINE
+                                "/classroom/*/banner").permitAll()
                         .requestMatchers("/teacher/**").hasRole("TEACHER")
-                        .requestMatchers("/student/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

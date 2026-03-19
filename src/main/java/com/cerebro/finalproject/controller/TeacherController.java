@@ -65,7 +65,6 @@ public class TeacherController {
 
         model.addAttribute("classRoom", classroom);
         model.addAttribute("quizzes", quizzes);
-        model.addAttribute("students", classroom.getStudents());
         return "teacher_classlist";
     }
 
@@ -98,7 +97,6 @@ public class TeacherController {
         }
 
         Quiz quiz = quizService.createQuiz(title, description, classroomOpt.get(), teacher);
-
         return "redirect:/teacher/quiz/" + quiz.getId() + "/edit";
     }
 
@@ -120,7 +118,6 @@ public class TeacherController {
 
         Quiz quiz = quizOpt.get();
         Question.QuestionType type = Question.QuestionType.valueOf(typeStr);
-
         Double questionPoints = (points != null && points > 0) ? points : 1.0;
 
         if (type == Question.QuestionType.MCQ) {
@@ -196,38 +193,24 @@ public class TeacherController {
 
         if (!attempts.isEmpty() && quiz.getTotalPoints() != null && quiz.getTotalPoints() > 0) {
             double totalPoints = quiz.getTotalPoints();
-
             double maxScore = 0.0;
             double minScore = totalPoints;
 
             for (Attempt attempt : attempts) {
                 if (attempt.getScore() != null) {
-                    if (attempt.getScore() > maxScore) {
-                        maxScore = attempt.getScore();
-                    }
-                    if (attempt.getScore() < minScore) {
-                        minScore = attempt.getScore();
-                    }
+                    if (attempt.getScore() > maxScore) maxScore = attempt.getScore();
+                    if (attempt.getScore() < minScore) minScore = attempt.getScore();
                 }
             }
 
-            long excellentCount = 0;
-            long goodCount = 0;
-            long averageCount = 0;
-            long poorCount = 0;
-
+            long excellentCount = 0, goodCount = 0, averageCount = 0, poorCount = 0;
             for (Attempt attempt : attempts) {
                 if (attempt.getScore() != null) {
                     double percentage = (attempt.getScore() / totalPoints) * 100;
-                    if (percentage >= 90) {
-                        excellentCount++;
-                    } else if (percentage >= 80) {
-                        goodCount++;
-                    } else if (percentage >= 70) {
-                        averageCount++;
-                    } else {
-                        poorCount++;
-                    }
+                    if (percentage >= 90) excellentCount++;
+                    else if (percentage >= 80) goodCount++;
+                    else if (percentage >= 70) averageCount++;
+                    else poorCount++;
                 }
             }
 
@@ -249,7 +232,6 @@ public class TeacherController {
         return "teacher_insidequiz_result";
     }
 
-    // NEW: View detailed attempt with essay grading
     @GetMapping("/attempt/{attemptId}/review")
     public String reviewAttempt(@PathVariable Long attemptId, Model model, RedirectAttributes redirectAttributes) {
         Optional<Attempt> attemptOpt = quizService.getAttemptById(attemptId);
@@ -268,7 +250,6 @@ public class TeacherController {
         return "teacher_review_attempt";
     }
 
-    // NEW: Grade essay answer
     @PostMapping("/answer/{answerId}/grade")
     public String gradeEssayAnswer(@PathVariable Long answerId,
                                    @RequestParam("score") Double score,
@@ -280,7 +261,6 @@ public class TeacherController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to grade answer: " + e.getMessage());
         }
-
         return "redirect:/teacher/attempt/" + attemptId + "/review";
     }
 }

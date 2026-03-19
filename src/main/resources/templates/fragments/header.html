@@ -8,6 +8,9 @@
 
     <title>Header</title>
 
+    <!-- Font Awesome CDN - CRITICAL FOR ICONS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <style>
@@ -29,10 +32,6 @@
             z-index: -1;
         }
 
-        /* CEREBRO METRON TEXT - ADJUSTABLE */
-
-
-
         .header-logo img {
             height: 40px;
             width: auto;
@@ -45,7 +44,6 @@
             filter: brightness(1.5) drop-shadow(0 0 15px rgba(127, 127, 255, 0.8));
             transform: scale(1.05);
         }
-
 
         .header .user-img img {
             border: 2px solid rgba(127, 127, 255, 0.6);
@@ -113,6 +111,7 @@
         .dropdown-content-body ul li a i,
         .dropdown-content-body ul li button i {
             filter: drop-shadow(0 0 5px rgba(127, 127, 255, 0.5));
+            margin-right: 8px;
         }
 
         .hamburger .toggle-icon {
@@ -126,7 +125,6 @@
             transform: scale(1.1);
         }
 
-        /* Adjust header content layout */
         .header-content {
             display: flex;
             align-items: center;
@@ -138,6 +136,14 @@
             align-items: center;
         }
 
+        /* Ensure icons are visible */
+        i.fa, i[class*="icon-"] {
+            display: inline-block;
+            font-style: normal;
+            font-variant: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+        }
     </style>
 </head>
 <body>
@@ -148,13 +154,9 @@
         <div class="header-left">
             <div class="nav-control">
                 <div class="hamburger">
-                    <span class="toggle-icon"><i class="icon-menu"></i></span>
+                    <span class="toggle-icon"><i class="fa fa-bars"></i></span>
                 </div>
             </div>
-
-
-            <!-- Add Logo Here -->
-
         </div>
 
         <div class="header-right">
@@ -169,7 +171,7 @@
                             <ul>
                                 <li>
                                     <a href="javascript:void(0)">
-                                        <i class="icon-user"></i>
+                                        <i class="fa fa-user"></i>
                                         <span th:text="${#authentication.principal.name}">Profile</span>
                                     </a>
                                 </li>
@@ -177,7 +179,7 @@
                                     <form th:action="@{/logout}" method="post" style="display: inline;">
                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                         <button type="submit" class="dropdown-item" style="border: none; background: none; cursor: pointer; width: 100%; text-align: left;">
-                                            <i class="icon-key"></i> <span>Logout</span>
+                                            <i class="fa fa-sign-out"></i> <span>Logout</span>
                                         </button>
                                     </form>
                                 </li>

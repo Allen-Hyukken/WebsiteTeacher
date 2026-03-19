@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
@@ -33,18 +32,15 @@ public class MainController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user,
-                               @RequestParam("role") String roleStr,
-                               Model model) {
+    public String registerUser(@ModelAttribute User user, Model model) {
         try {
             // Check if email already exists
             if (userService.existsByEmail(user.getEmail())) {
                 return "redirect:/register?error";
             }
 
-            // Set role from the radio button
-            User.Role role = User.Role.valueOf(roleStr);
-            user.setRole(role);
+            // All registered users are teachers
+            user.setRole(User.Role.TEACHER);
 
             // Save user (password will be encoded in service)
             userService.registerUser(user);

@@ -10,9 +10,9 @@ import java.util.Optional;
 @Repository
 public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
 
-    Optional<Classroom> findByCode(String code);
-
     List<Classroom> findByTeacherId(Long teacherId);
 
     boolean existsByCode(String code);
+
+    Optional<Classroom> findByCode(String code);
 }

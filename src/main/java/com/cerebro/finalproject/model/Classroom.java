@@ -21,7 +21,6 @@ public class Classroom {
     @Column(name = "banner_path")
     private String bannerPath;
 
-    // NEW: Store banner image in database
     @Lob
     @Column(name = "banner_image", columnDefinition = "LONGBLOB")
     private byte[] bannerImage;
@@ -32,14 +31,6 @@ public class Classroom {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private User teacher;
-
-    @ManyToMany
-    @JoinTable(
-            name = "classroom_students",
-            joinColumns = @JoinColumn(name = "classroom_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    private Set<User> students = new HashSet<>();
 
     @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
     private Set<Quiz> quizzes = new HashSet<>();
@@ -86,7 +77,6 @@ public class Classroom {
         this.bannerPath = bannerPath;
     }
 
-    // NEW Getters and Setters
     public byte[] getBannerImage() {
         return bannerImage;
     }
@@ -109,14 +99,6 @@ public class Classroom {
 
     public void setTeacher(User teacher) {
         this.teacher = teacher;
-    }
-
-    public Set<User> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<User> students) {
-        this.students = students;
     }
 
     public Set<Quiz> getQuizzes() {

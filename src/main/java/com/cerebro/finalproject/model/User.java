@@ -28,8 +28,12 @@ public class User {
     @OneToMany(mappedBy = "teacher")
     private Set<Classroom> teacherClasses = new HashSet<>();
 
+    @ManyToMany(mappedBy = "students")
+    private Set<Classroom> enrolledClasses = new HashSet<>();
+
     public enum Role {
-        TEACHER
+        TEACHER,
+        STUDENT
     }
 
     // Constructors
@@ -43,51 +47,24 @@ public class User {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getEmail() {
-        return email;
-    }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public Set<Classroom> getTeacherClasses() { return teacherClasses; }
+    public void setTeacherClasses(Set<Classroom> teacherClasses) { this.teacherClasses = teacherClasses; }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Set<Classroom> getTeacherClasses() {
-        return teacherClasses;
-    }
-
-    public void setTeacherClasses(Set<Classroom> teacherClasses) {
-        this.teacherClasses = teacherClasses;
-    }
+    public Set<Classroom> getEnrolledClasses() { return enrolledClasses; }
+    public void setEnrolledClasses(Set<Classroom> enrolledClasses) { this.enrolledClasses = enrolledClasses; }
 }

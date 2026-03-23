@@ -14,22 +14,23 @@ import java.util.Optional;
 @Service
 public class QuizService {
 
-    @Autowired
-    private QuizRepository quizRepository;
+    @Autowired private QuizRepository quizRepository;
+    @Autowired private QuestionRepository questionRepository;
+    @Autowired private ChoiceRepository choiceRepository;
+    @Autowired private AttemptRepository attemptRepository;
+    @Autowired private AnswerRepository answerRepository;
 
-    @Autowired
-    private QuestionRepository questionRepository;
+    // ── Quiz CRUD ───────────────────────────────────────────────────────────
 
-    @Autowired
-    private ChoiceRepository choiceRepository;
+    /** Legacy overload – keeps existing call sites working. */
+    public Quiz createQuiz(String title, String description,
+                           Classroom classroom, User teacher) {
+        return createQuiz(title, description, classroom, teacher, null, null);
+    }
 
-    @Autowired
-    private AttemptRepository attemptRepository;
-
-    @Autowired
-    private AnswerRepository answerRepository;
-
-    public Quiz createQuiz(String title, String description, Classroom classroom, User teacher) {
+    public Quiz createQuiz(String title, String description,
+                           Classroom classroom, User teacher,
+                           Integer timeLimitMinutes, LocalDateTime deadline) {
         Quiz quiz = new Quiz();
         quiz.setTitle(title);
         quiz.setDescription(description);
@@ -37,6 +38,9 @@ public class QuizService {
         quiz.setTeacher(teacher);
         quiz.setCreatedAt(LocalDateTime.now());
         quiz.setTotalPoints(0.0);
+        quiz.setTimeLimitMinutes(timeLimitMinutes);
+        quiz.setDeadline(deadline);
+        quiz.setShowAnswers(false);
         return quizRepository.save(quiz);
     }
 
@@ -53,78 +57,82 @@ public class QuizService {
     }
 
     @Transactional
-    public void recalculateAllQuizTotals() {
-        List<Quiz> allQuizzes = quizRepository.findAll();
-        for (Quiz quiz : allQuizzes) {
-            updateQuizTotalPoints(quiz.getId());
-        }
-    }
-
-    @Transactional
     public void deleteQuiz(Long id) {
         quizRepository.deleteById(id);
     }
 
+    /** Flips the showAnswers flag and returns the updated quiz. */
     @Transactional
-    public Question addQuestion(Quiz quiz, Question.QuestionType type, String text, String correctAnswer) {
+    public Quiz toggleShowAnswers(Long quizId) {
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+        quiz.setShowAnswers(!quiz.getShowAnswers());
+        return quizRepository.save(quiz);
+    }
+
+    // ── Questions ───────────────────────────────────────────────────────────
+
+    @Transactional
+    public Question addQuestion(Quiz quiz, Question.QuestionType type,
+                                String text, String correctAnswer) {
         return addQuestion(quiz, type, text, correctAnswer, 1.0);
     }
 
     @Transactional
-    public Question addQuestion(Quiz quiz, Question.QuestionType type, String text, String correctAnswer, Double points) {
-        Question question = new Question();
-        question.setQuiz(quiz);
-        question.setType(type);
-        question.setText(text);
-        question.setCorrectAnswer(correctAnswer);
-        question.setQIndex(quiz.getQuestions().size());
-        question.setPoints(points != null ? points : 1.0);
-
-        Question savedQuestion = questionRepository.save(question);
+    public Question addQuestion(Quiz quiz, Question.QuestionType type,
+                                String text, String correctAnswer, Double points) {
+        Question q = new Question();
+        q.setQuiz(quiz);
+        q.setType(type);
+        q.setText(text);
+        q.setCorrectAnswer(correctAnswer);
+        q.setQIndex(quiz.getQuestions().size());
+        q.setPoints(points != null ? points : 1.0);
+        Question saved = questionRepository.save(q);
         updateQuizTotalPoints(quiz.getId());
-
-        return savedQuestion;
+        return saved;
     }
 
     @Transactional
-    public Question addQuestionWithChoices(Quiz quiz, String text, List<String> choiceTexts, String correctChoiceText) {
+    public Question addQuestionWithChoices(Quiz quiz, String text,
+                                           List<String> choiceTexts,
+                                           String correctChoiceText) {
         return addQuestionWithChoices(quiz, text, choiceTexts, correctChoiceText, 1.0);
     }
 
     @Transactional
-    public Question addQuestionWithChoices(Quiz quiz, String text, List<String> choiceTexts, String correctChoiceText, Double points) {
-        Question question = new Question();
-        question.setQuiz(quiz);
-        question.setType(Question.QuestionType.MCQ);
-        question.setText(text);
-        question.setQIndex(quiz.getQuestions().size());
-        question.setPoints(points != null ? points : 1.0);
-        question = questionRepository.save(question);
+    public Question addQuestionWithChoices(Quiz quiz, String text,
+                                           List<String> choiceTexts,
+                                           String correctChoiceText, Double points) {
+        Question q = new Question();
+        q.setQuiz(quiz);
+        q.setType(Question.QuestionType.MCQ);
+        q.setText(text);
+        q.setQIndex(quiz.getQuestions().size());
+        q.setPoints(points != null ? points : 1.0);
+        q = questionRepository.save(q);
 
         for (String choiceText : choiceTexts) {
             if (choiceText != null && !choiceText.trim().isEmpty()) {
-                Choice choice = new Choice();
-                choice.setQuestion(question);
-                choice.setText(choiceText.trim());
-                choice.setCorrect(choiceText.trim().equalsIgnoreCase(correctChoiceText.trim()));
-                choiceRepository.save(choice);
+                Choice c = new Choice();
+                c.setQuestion(q);
+                c.setText(choiceText.trim());
+                c.setCorrect(choiceText.trim().equalsIgnoreCase(
+                        correctChoiceText != null ? correctChoiceText.trim() : ""));
+                choiceRepository.save(c);
             }
         }
-
         updateQuizTotalPoints(quiz.getId());
-        return question;
+        return q;
     }
 
     @Transactional
     public void deleteQuestion(Long questionId) {
-        Optional<Question> questionOpt = questionRepository.findById(questionId);
-        if (questionOpt.isPresent()) {
-            Question question = questionOpt.get();
-            Long quizId = question.getQuiz().getId();
-
+        Optional<Question> opt = questionRepository.findById(questionId);
+        if (opt.isPresent()) {
+            Long quizId = opt.get().getQuiz().getId();
             questionRepository.deleteById(questionId);
             questionRepository.flush();
-
             updateQuizTotalPoints(quizId);
         }
     }
@@ -133,8 +141,11 @@ public class QuizService {
         quizRepository.updateTotalPoints(quizId);
     }
 
+    // ── Attempts & Submission ───────────────────────────────────────────────
+
     @Transactional
-    public Attempt submitQuiz(Quiz quiz, User student, Map<String, String> answers) {
+    public Attempt submitQuiz(Quiz quiz, User student,
+                              Map<String, String> answers) {
         Attempt attempt = new Attempt();
         attempt.setQuiz(quiz);
         attempt.setStudent(student);
@@ -144,15 +155,14 @@ public class QuizService {
         double totalScore = 0;
 
         for (Question question : quiz.getQuestions()) {
-            String answerKey = "q_" + question.getId();
-            String givenAnswer = answers.get(answerKey);
+            String givenAnswer = answers.get("q_" + question.getId());
 
             Answer answer = new Answer();
             answer.setAttempt(attempt);
             answer.setQuestion(question);
 
             boolean isCorrect = false;
-            double questionPoints = question.getPoints() != null ? question.getPoints() : 1.0;
+            double qPoints = question.getPoints() != null ? question.getPoints() : 1.0;
 
             switch (question.getType()) {
                 case MCQ:
@@ -161,27 +171,19 @@ public class QuizService {
                             Long choiceId = Long.parseLong(givenAnswer);
                             Optional<Choice> choiceOpt = choiceRepository.findById(choiceId);
                             if (choiceOpt.isPresent()) {
-                                Choice selectedChoice = choiceOpt.get();
-                                answer.setChoice(selectedChoice);
-                                isCorrect = selectedChoice.getCorrect();
+                                Choice selected = choiceOpt.get();
+                                answer.setChoice(selected);
+                                isCorrect = selected.getCorrect();
                             }
-                        } catch (NumberFormatException e) {
-                            isCorrect = false;
-                        }
+                        } catch (NumberFormatException ignored) {}
                     }
                     break;
 
                 case TF:
-                    answer.setGivenText(givenAnswer);
-                    if (givenAnswer != null && question.getCorrectAnswer() != null) {
-                        isCorrect = normalizeAnswer(givenAnswer).equals(normalizeAnswer(question.getCorrectAnswer()));
-                    }
-                    break;
-
                 case IDENT:
                     answer.setGivenText(givenAnswer);
                     if (givenAnswer != null && question.getCorrectAnswer() != null) {
-                        isCorrect = normalizeAnswer(givenAnswer).equals(normalizeAnswer(question.getCorrectAnswer()));
+                        isCorrect = normalize(givenAnswer).equals(normalize(question.getCorrectAnswer()));
                     }
                     break;
 
@@ -194,60 +196,17 @@ public class QuizService {
 
                 case ESSAY:
                     answer.setGivenText(givenAnswer);
-                    isCorrect = false; // Essays need manual grading
+                    isCorrect = false; // requires manual grading
                     break;
             }
 
             answer.setCorrect(isCorrect);
             answerRepository.save(answer);
-
-            if (isCorrect) {
-                totalScore += questionPoints;
-            }
+            if (isCorrect) totalScore += qPoints;
         }
 
         attempt.setScore(totalScore);
         return attemptRepository.save(attempt);
-    }
-
-    private String normalizeAnswer(String answer) {
-        if (answer == null) {
-            return "";
-        }
-        return answer.trim().toLowerCase().replaceAll("\\s+", " ");
-    }
-
-    private boolean compareCode(String studentCode, String correctCode) {
-        if (studentCode == null || correctCode == null) {
-            return false;
-        }
-
-        String normalizedStudent = normalizeCode(studentCode);
-        String normalizedCorrect = normalizeCode(correctCode);
-
-        return normalizedStudent.equals(normalizedCorrect);
-    }
-
-    private String normalizeCode(String code) {
-        if (code == null) {
-            return "";
-        }
-
-        code = code.replaceAll("//.*?(\r?\n|$)", "\n");
-        code = code.replaceAll("/\\*.*?\\*/", "");
-        code = code.replaceAll("[ \\t]+", " ");
-        code = code.replaceAll("\\s*([{};(),=+\\-*/<>!&|])\\s*", "$1");
-
-        String[] lines = code.split("\r?\n");
-        StringBuilder normalized = new StringBuilder();
-        for (String line : lines) {
-            String trimmed = line.trim();
-            if (!trimmed.isEmpty()) {
-                normalized.append(trimmed);
-            }
-        }
-
-        return normalized.toString().toLowerCase();
     }
 
     public List<Attempt> getQuizAttempts(Long quizId) {
@@ -256,26 +215,17 @@ public class QuizService {
 
     public double calculateAverageScore(Long quizId) {
         List<Attempt> attempts = attemptRepository.findByQuizId(quizId);
-        if (attempts.isEmpty()) {
-            return 0.0;
-        }
+        if (attempts.isEmpty()) return 0.0;
 
         Optional<Quiz> quizOpt = quizRepository.findById(quizId);
-        if (quizOpt.isEmpty()) {
-            return 0.0;
-        }
+        if (quizOpt.isEmpty()) return 0.0;
 
-        Quiz quiz = quizOpt.get();
-        double totalPoints = quiz.getTotalPoints();
-
-        if (totalPoints == 0) {
-            return 0.0;
-        }
+        double totalPoints = quizOpt.get().getTotalPoints();
+        if (totalPoints == 0) return 0.0;
 
         double sum = attempts.stream()
-                .mapToDouble(a -> (a.getScore() / totalPoints) * 100)
+                .mapToDouble(a -> (a.getScore() != null ? a.getScore() : 0.0) / totalPoints * 100)
                 .sum();
-
         return sum / attempts.size();
     }
 
@@ -287,73 +237,84 @@ public class QuizService {
         return attemptRepository.findFirstByQuizIdAndStudentIdOrderBySubmittedAtDesc(quizId, studentId);
     }
 
-    // NEW: Get attempt by ID
     public Optional<Attempt> getAttemptById(Long attemptId) {
         return attemptRepository.findById(attemptId);
     }
 
-    // NEW: Grade essay answer
+    // ── Essay Grading ───────────────────────────────────────────────────────
+
+    /**
+     * Awards a manual score to an essay answer and recalculates the
+     * attempt's total score immediately.
+     */
     @Transactional
     public void gradeEssayAnswer(Long answerId, Double score) {
-        Optional<Answer> answerOpt = answerRepository.findById(answerId);
-        if (answerOpt.isEmpty()) {
-            throw new RuntimeException("Answer not found");
-        }
+        Answer answer = answerRepository.findById(answerId)
+                .orElseThrow(() -> new RuntimeException("Answer not found: " + answerId));
 
-        Answer answer = answerOpt.get();
         Question question = answer.getQuestion();
-
         if (question.getType() != Question.QuestionType.ESSAY) {
-            throw new RuntimeException("Only essay questions can be manually graded");
+            throw new RuntimeException("Only ESSAY answers can be manually graded");
         }
 
         double maxPoints = question.getPoints() != null ? question.getPoints() : 1.0;
-
         if (score < 0 || score > maxPoints) {
             throw new RuntimeException("Score must be between 0 and " + maxPoints);
         }
 
-        // Store score in givenText with special format
-        String originalEssay = answer.getActualEssayText();
-        answer.setEssayScore(score, originalEssay);
+        answer.applyEssayGrade(score);
         answerRepository.save(answer);
 
-        // Recalculate attempt total score
         recalculateAttemptScore(answer.getAttempt().getId());
     }
 
-    // NEW: Recalculate attempt score
+    /** Recomputes and saves the total score for an attempt. */
     @Transactional
     public void recalculateAttemptScore(Long attemptId) {
-        Optional<Attempt> attemptOpt = attemptRepository.findById(attemptId);
-        if (attemptOpt.isEmpty()) {
-            return;
-        }
+        Attempt attempt = attemptRepository.findById(attemptId).orElse(null);
+        if (attempt == null) return;
 
-        Attempt attempt = attemptOpt.get();
         List<Answer> answers = answerRepository.findByAttemptId(attemptId);
-        double newTotalScore = 0.0;
+        double total = 0.0;
 
         for (Answer ans : answers) {
             Question q = ans.getQuestion();
             double qPoints = q.getPoints() != null ? q.getPoints() : 1.0;
 
             if (q.getType() == Question.QuestionType.ESSAY) {
-                // For essay questions, use the graded score if available
-                Double essayScore = ans.getEssayScore();
-                if (essayScore != null) {
-                    newTotalScore += essayScore;
-                }
-                // If not graded yet (essayScore is null), don't add any points
+                if (ans.getEssayScore() != null) total += ans.getEssayScore();
             } else {
-                // For auto-graded questions
-                if (ans.getCorrect()) {
-                    newTotalScore += qPoints;
-                }
+                if (Boolean.TRUE.equals(ans.getCorrect())) total += qPoints;
             }
         }
 
-        attempt.setScore(newTotalScore);
+        attempt.setScore(total);
         attemptRepository.save(attempt);
+    }
+
+    // ── Private helpers ─────────────────────────────────────────────────────
+
+    private String normalize(String s) {
+        if (s == null) return "";
+        return s.trim().toLowerCase().replaceAll("\\s+", " ");
+    }
+
+    private boolean compareCode(String student, String correct) {
+        return normalizeCode(student).equals(normalizeCode(correct));
+    }
+
+    private String normalizeCode(String code) {
+        if (code == null) return "";
+        code = code.replaceAll("//.*?(\r?\n|$)", "\n");
+        code = code.replaceAll("/\\*.*?\\*/", "");
+        code = code.replaceAll("[ \\t]+", " ");
+        code = code.replaceAll("\\s*([{};(),=+\\-*/<>!&|])\\s*", "$1");
+        String[] lines = code.split("\r?\n");
+        StringBuilder sb = new StringBuilder();
+        for (String line : lines) {
+            String t = line.trim();
+            if (!t.isEmpty()) sb.append(t);
+        }
+        return sb.toString().toLowerCase();
     }
 }

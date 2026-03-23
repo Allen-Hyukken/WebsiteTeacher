@@ -16,7 +16,6 @@
     <link th:href="@{/plugins/chartist/css/chartist.min.css}" rel="stylesheet">
     <link th:href="@{/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
-
     <link th:href="@{/css/teacher-dashboard.css}" rel="stylesheet">
 </head>
 
@@ -25,8 +24,6 @@
 <div id="main-wrapper">
 
     <div th:replace="fragments/navheader-teacher :: navheader-teacher"></div>
-
-
     <div th:replace="fragments/header :: header"></div>
 
     <div class="content-body">
@@ -35,14 +32,14 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a th:href="@{/teacher}">Home</a></li>
                     <li class="breadcrumb-item"><a th:href="@{|/teacher/class/${quiz.classRoom.id}|}">Classroom</a></li>
-                    <li class="breadcrumb-item active">Edit Quiz- <p style="display: inline;" th:text="${quiz.title}">Quiz Name</p></li>
+                    <li class="breadcrumb-item active">Edit Quiz – <span th:text="${quiz.title}">Quiz Name</span></li>
                 </ol>
             </div>
         </div>
 
         <div class="container-fluid">
 
-            <!-- Quiz Title -->
+            <!-- ── Quiz Details ─────────────────────────────────────────────── -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Edit Quiz Details</h4>
@@ -51,22 +48,89 @@
 
                         <div class="form-group">
                             <label>Quiz Title</label>
-                            <input type="text" name="title" th:value="${quiz.title}" placeholder="Quiz Title" class="form-control" required>
+                            <input type="text" name="title" th:value="${quiz.title}"
+                                   placeholder="Quiz Title" class="form-control" required>
                         </div>
+
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea name="description" th:text="${quiz.description}" placeholder="Describe the quiz" class="form-control" rows="3"></textarea>
+                            <textarea name="description" th:text="${quiz.description}"
+                                      placeholder="Describe the quiz" class="form-control" rows="3"></textarea>
                         </div>
+
+                        <!-- ── Time Limit & Deadline Row ──────────────────── -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="timeLimitMinutes">
+                                        <i class="fa fa-clock-o"></i> Time Limit
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number"
+                                               id="timeLimitMinutes"
+                                               name="timeLimitMinutes"
+                                               class="form-control"
+                                               th:value="${quiz.timeLimitMinutes}"
+                                               min="1"
+                                               placeholder="No limit">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">minutes</span>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        How long a student has <em>after opening</em> the quiz. Leave blank for no limit.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="deadline">
+                                        <i class="fa fa-calendar"></i> Deadline
+                                    </label>
+                                    <input type="datetime-local"
+                                           id="deadline"
+                                           name="deadline"
+                                           class="form-control"
+                                           th:value="${quiz.deadline != null ?
+                                               #temporals.format(quiz.deadline, 'yyyy-MM-dd''T''HH:mm') : ''}">
+                                    <small class="form-text text-muted">
+                                        Students cannot submit after this date/time. Leave blank for no deadline.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ─────────────────────────────────────────────── -->
+
                         <div class="alert alert-info">
                             <strong>Total Points:</strong> <span th:text="${quiz.totalPoints}">0</span>
                             (Automatically calculated based on question points)
                         </div>
+
+                        <!-- Current settings summary badge row -->
+                        <div class="mb-3">
+                            <span th:if="${quiz.timeLimitMinutes != null}" class="badge badge-warning mr-2">
+                                <i class="fa fa-clock-o"></i>
+                                <span th:text="${quiz.timeLimitMinutes} + ' min limit'"></span>
+                            </span>
+                            <span th:if="${quiz.timeLimitMinutes == null}" class="badge badge-secondary mr-2">
+                                <i class="fa fa-clock-o"></i> No time limit
+                            </span>
+                            <span th:if="${quiz.deadline != null}" class="badge badge-danger">
+                                <i class="fa fa-calendar"></i> Due:
+                                <span th:text="${#temporals.format(quiz.deadline, 'MMM dd, yyyy HH:mm')}"></span>
+                            </span>
+                            <span th:if="${quiz.deadline == null}" class="badge badge-secondary">
+                                <i class="fa fa-calendar"></i> No deadline
+                            </span>
+                        </div>
+
                         <button type="submit" class="btn btn-success">Update Quiz Info</button>
                     </form>
                 </div>
             </div>
 
-            <!-- Questions List -->
+            <!-- ── Questions List ────────────────────────────────────────────── -->
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Questions</h4>
@@ -89,7 +153,6 @@
                                 <p class="mt-3"><strong>Question:</strong> <span th:text="${q.text}"></span></p>
                                 <p><strong>Type:</strong> <span th:text="${q.type}"></span></p>
 
-                                <!-- Multiple Choice -->
                                 <div th:if="${q.type.name() == 'MCQ'}" class="mt-3">
                                     <h6>Choices:</h6>
                                     <ul>
@@ -100,17 +163,14 @@
                                     </ul>
                                 </div>
 
-                                <!-- True/False -->
                                 <div th:if="${q.type.name() == 'TF'}" class="mt-3">
                                     <p><strong>Correct Answer:</strong> <span th:text="${q.correctAnswer}"></span></p>
                                 </div>
 
-                                <!-- Identification -->
                                 <div th:if="${q.type.name() == 'IDENT'}" class="mt-3">
                                     <p><strong>Correct Answer:</strong> <span th:text="${q.correctAnswer}"></span></p>
                                 </div>
 
-                                <!-- Coding -->
                                 <div th:if="${q.type.name() == 'CODING'}" class="mt-3">
                                     <h6>Expected Code Solution:</h6>
                                     <div class="code-display" th:attr="data-code=${q.correctAnswer}">
@@ -118,7 +178,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Essay -->
                                 <div th:if="${q.type.name() == 'ESSAY'}" class="mt-3">
                                     <p class="text-muted">Essay questions require manual grading.</p>
                                 </div>
@@ -132,7 +191,7 @@
                 </div>
             </div>
 
-            <!-- Add Questions Section -->
+            <!-- ── Add Questions Section ────────────────────────────────────── -->
             <div class="card mt-4">
                 <div class="card-body">
                     <h4 class="card-title">Add New Question</h4>
@@ -141,13 +200,13 @@
                         <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalMCQ">Multiple Choice</button>
                         <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalTF">True or False</button>
                         <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalIdent">Identification</button>
-                        <button type="button" class="btn btn-info m-1" data-toggle="modal" data-target="#modalCoding">Coding Question</button>
+                        <button type="button" class="btn btn-info m-1"    data-toggle="modal" data-target="#modalCoding">Coding Question</button>
                         <button type="button" class="btn btn-primary m-1" data-toggle="modal" data-target="#modalEssay">Essay</button>
                     </div>
                 </div>
             </div>
 
-            <!-- MCQ Modal -->
+            <!-- ── MCQ Modal ─────────────────────────────────────────────────── -->
             <div class="modal fade" id="modalMCQ" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -187,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- True/False Modal -->
+            <!-- ── True/False Modal ──────────────────────────────────────────── -->
             <div class="modal fade" id="modalTF" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -223,7 +282,7 @@
                 </div>
             </div>
 
-            <!-- Identification Modal -->
+            <!-- ── Identification Modal ──────────────────────────────────────── -->
             <div class="modal fade" id="modalIdent" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -256,7 +315,7 @@
                 </div>
             </div>
 
-            <!-- Coding Modal -->
+            <!-- ── Coding Modal ──────────────────────────────────────────────── -->
             <div class="modal fade" id="modalCoding" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -271,14 +330,12 @@
                                 <div class="form-group">
                                     <label>Problem Description</label>
                                     <textarea class="form-control" name="text" rows="4"
-                                              placeholder="Describe the coding problem. E.g., 'Write a function that returns the sum of two numbers.'"
-                                              required></textarea>
+                                              placeholder="Describe the coding problem." required></textarea>
                                     <small class="form-text text-muted">Provide clear instructions for what the student needs to code.</small>
                                 </div>
                                 <div class="form-group">
                                     <label>Points</label>
                                     <input type="number" class="form-control" name="points" value="2.0" step="0.5" min="0.5" required>
-                                    <small class="form-text text-muted">Coding questions typically worth more points.</small>
                                 </div>
                                 <div class="form-group">
                                     <label>Expected Code Solution</label>
@@ -292,20 +349,12 @@
                                         <div class="code-editor-wrapper">
                                             <div id="modal-line-numbers" class="line-numbers">1</div>
                                             <div id="modal-code-highlight" class="code-highlight"></div>
-                                            <textarea
-                                                    class="code-editor"
-                                                    id="modal-code-editor"
-                                                    name="correct"
-                                                    placeholder="// Enter the correct code solution here...
-// Example:
-function sum(a, b) {
-    return a + b;
-}"
-                                                    required
-                                                    spellcheck="false"></textarea>
+                                            <textarea class="code-editor" id="modal-code-editor" name="correct"
+                                                      placeholder="// Enter the correct code solution here..."
+                                                      required spellcheck="false"></textarea>
                                         </div>
                                         <div class="code-footer">
-                                            <i class="fa fa-lightbulb-o"></i> Note: Student code will be compared after normalizing whitespace and removing comments
+                                            <i class="fa fa-lightbulb-o"></i> Student code will be compared after normalising whitespace and removing comments.
                                         </div>
                                     </div>
                                 </div>
@@ -318,7 +367,7 @@ function sum(a, b) {
                 </div>
             </div>
 
-            <!-- Essay Modal -->
+            <!-- ── Essay Modal ───────────────────────────────────────────────── -->
             <div class="modal fade" id="modalEssay" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -362,7 +411,6 @@ function sum(a, b) {
 <script th:src="@{/js/settings.js}"></script>
 <script th:src="@{/js/gleek.js}"></script>
 <script th:src="@{/js/styleSwitcher.js}"></script>
-
 <script th:src="@{/plugins/chart.js/Chart.bundle.min.js}"></script>
 <script th:src="@{/plugins/circle-progress/circle-progress.min.js}"></script>
 <script th:src="@{/plugins/d3v3/index.js}"></script>
@@ -375,8 +423,6 @@ function sum(a, b) {
 <script th:src="@{/plugins/chartist/js/chartist.min.js}"></script>
 <script th:src="@{/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js}"></script>
 <script th:src="@{/js/dashboard/dashboard-1.js}"></script>
-
-<!-- Syntax Highlighting Script -->
 <script th:src="@{/js/teacher-dashboard.js}"></script>
 
 </body>

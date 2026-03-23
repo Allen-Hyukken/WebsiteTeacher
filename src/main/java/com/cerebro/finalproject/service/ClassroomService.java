@@ -6,6 +6,7 @@ import com.cerebro.finalproject.repository.ClassroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,8 +61,27 @@ public class ClassroomService {
         return classroomRepository.findById(id);
     }
 
+    /** Returns classroom with students collection eagerly loaded. */
+    public Optional<Classroom> findByIdWithStudents(Long id) {
+        return classroomRepository.findByIdWithStudents(id);
+    }
+
     public List<Classroom> findByTeacherId(Long teacherId) {
         return classroomRepository.findByTeacherId(teacherId);
+    }
+
+    /**
+     * Removes a student from the given classroom.
+     * Uses a fresh fetch with students to avoid lazy-load issues.
+     */
+    @Transactional
+    public void removeStudent(Long classroomId, Long studentId) {
+        Optional<Classroom> classroomOpt = classroomRepository.findByIdWithStudents(classroomId);
+        if (classroomOpt.isPresent()) {
+            Classroom classroom = classroomOpt.get();
+            classroom.getStudents().removeIf(s -> s.getId().equals(studentId));
+            classroomRepository.save(classroom);
+        }
     }
 
     private String generateUniqueCode() {

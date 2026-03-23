@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-// Quiz Entity
 @Entity
 @Table(name = "quiz")
 public class Quiz {
@@ -37,13 +36,29 @@ public class Quiz {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    /** Minutes a student has after opening the quiz. NULL = no limit. */
+    @Column(name = "time_limit_minutes")
+    private Integer timeLimitMinutes;
+
+    /** Students cannot start or submit after this time. NULL = no deadline. */
+    @Column(name = "deadline")
+    private LocalDateTime deadline;
+
+    /**
+     * Controls whether students see correct/wrong answer feedback
+     * after submitting. false = score only (default).
+     */
+    @Column(name = "show_answers", nullable = false)
+    private Boolean showAnswers = false;
+
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions = new ArrayList<>();
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<Attempt> attempts = new ArrayList<>();
 
-    // Getters and Setters
+    // ── Getters & Setters ───────────────────────────────────────────────────
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -68,15 +83,18 @@ public class Quiz {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
+    public Integer getTimeLimitMinutes() { return timeLimitMinutes; }
+    public void setTimeLimitMinutes(Integer timeLimitMinutes) { this.timeLimitMinutes = timeLimitMinutes; }
+
+    public LocalDateTime getDeadline() { return deadline; }
+    public void setDeadline(LocalDateTime deadline) { this.deadline = deadline; }
+
+    public Boolean getShowAnswers() { return showAnswers != null && showAnswers; }
+    public void setShowAnswers(Boolean showAnswers) { this.showAnswers = showAnswers != null && showAnswers; }
+
     public List<Question> getQuestions() { return questions; }
     public void setQuestions(List<Question> questions) { this.questions = questions; }
 
     public List<Attempt> getAttempts() { return attempts; }
     public void setAttempts(List<Attempt> attempts) { this.attempts = attempts; }
 }
-
-
-
-
-
-

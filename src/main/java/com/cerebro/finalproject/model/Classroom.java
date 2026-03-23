@@ -32,6 +32,14 @@ public class Classroom {
     @JoinColumn(name = "teacher_id")
     private User teacher;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "classroom_students",
+            joinColumns = @JoinColumn(name = "classroom_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private Set<User> students = new HashSet<>();
+
     @OneToMany(mappedBy = "classRoom", cascade = CascadeType.ALL)
     private Set<Quiz> quizzes = new HashSet<>();
 
@@ -45,67 +53,30 @@ public class Classroom {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getCode() { return code; }
+    public void setCode(String code) { this.code = code; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getBannerPath() { return bannerPath; }
+    public void setBannerPath(String bannerPath) { this.bannerPath = bannerPath; }
 
-    public String getCode() {
-        return code;
-    }
+    public byte[] getBannerImage() { return bannerImage; }
+    public void setBannerImage(byte[] bannerImage) { this.bannerImage = bannerImage; }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+    public String getBannerContentType() { return bannerContentType; }
+    public void setBannerContentType(String bannerContentType) { this.bannerContentType = bannerContentType; }
 
-    public String getBannerPath() {
-        return bannerPath;
-    }
+    public User getTeacher() { return teacher; }
+    public void setTeacher(User teacher) { this.teacher = teacher; }
 
-    public void setBannerPath(String bannerPath) {
-        this.bannerPath = bannerPath;
-    }
+    public Set<User> getStudents() { return students; }
+    public void setStudents(Set<User> students) { this.students = students; }
 
-    public byte[] getBannerImage() {
-        return bannerImage;
-    }
-
-    public void setBannerImage(byte[] bannerImage) {
-        this.bannerImage = bannerImage;
-    }
-
-    public String getBannerContentType() {
-        return bannerContentType;
-    }
-
-    public void setBannerContentType(String bannerContentType) {
-        this.bannerContentType = bannerContentType;
-    }
-
-    public User getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(User teacher) {
-        this.teacher = teacher;
-    }
-
-    public Set<Quiz> getQuizzes() {
-        return quizzes;
-    }
-
-    public void setQuizzes(Set<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
+    public Set<Quiz> getQuizzes() { return quizzes; }
+    public void setQuizzes(Set<Quiz> quizzes) { this.quizzes = quizzes; }
 }

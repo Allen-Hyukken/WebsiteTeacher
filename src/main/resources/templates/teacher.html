@@ -16,7 +16,6 @@
     <link th:href="@{/plugins/chartist/css/chartist.min.css}" rel="stylesheet">
     <link th:href="@{/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
-
     <link th:href="@{/css/teacher-dashboard.css}" rel="stylesheet">
 </head>
 <body>
@@ -30,12 +29,13 @@
             <div class="col p-md-0">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active"><a th:href="@{/teacher}">Home</a></li>
-
                 </ol>
             </div>
         </div>
 
         <div class="container-fluid">
+
+            <!-- ── Create Class ──────────────────────────────────────────────── -->
             <div class="col-lg-5 mb-4">
                 <div class="card p-4">
                     <h5 class="card-title text-center">Create a New Class</h5>
@@ -49,10 +49,14 @@
                         </div>
 
                         <div class="custom-file mb-3">
-                            <input type="file" class="custom-file-input" id="classPic" name="banner" accept="image/*">
+                            <input type="file" class="custom-file-input" id="classPic"
+                                   name="banner" accept="image/*">
                             <label class="custom-file-label" for="classPic">Upload Class Banner (Optional)</label>
                         </div>
-                        <small class="form-text text-muted mb-3" style="color: rgba(255, 255, 255, 0.8) !important;">Recommended size: 1200x400px. Max 5MB.</small>
+                        <small class="form-text text-muted mb-3"
+                               style="color: rgba(255, 255, 255, 0.8) !important;">
+                            Recommended size: 1200×400 px. Max 5 MB.
+                        </small>
 
                         <div class="text-right">
                             <button type="submit" class="btn btn-success btn-rounded px-4">Create Class</button>
@@ -61,6 +65,7 @@
                 </div>
             </div>
 
+            <!-- ── Class Cards ───────────────────────────────────────────────── -->
             <div class="row">
                 <div class="col">
                     <h3 class="d-inline">My Classes</h3>
@@ -68,13 +73,22 @@
 
                     <div class="row" th:if="${!#lists.isEmpty(classes)}">
                         <div class="col-md-6 col-lg-3 mb-4" th:each="c : ${classes}">
-                            <div class="card shadow-sm class-card" th:onclick="|window.location.href='/teacher/class/' + ${c.id}|">
+                            <div class="card shadow-sm class-card"
+                                 th:onclick="|window.location.href='/teacher/class/' + ${c.id}|">
+
                                 <img class="class-banner"
                                      th:src="@{|/classroom/${c.id}/banner|}"
                                      alt="Class Banner" />
 
                                 <div class="card-body">
                                     <h5 class="card-title" th:text="${c.name}">Class Name</h5>
+
+                                    <!-- Student count badge -->
+                                    <p class="mb-1">
+                                        <i class="fa fa-users text-muted"></i>
+                                        <span class="text-muted"
+                                              th:text="${c.students.size()} + ' student(s)'">0 student(s)</span>
+                                    </p>
 
                                     <p class="mb-0">
                                         <strong>Code:</strong>
@@ -84,12 +98,16 @@
                                               class="text-primary class-code copy-code"
                                               title="Click to copy code">
                                         </span>
-                                        <small th:id="'copyFeedback_' + ${c.id}" class="text-success ml-2" style="display: none;">Copied!</small>
+                                        <small th:id="'copyFeedback_' + ${c.id}"
+                                               class="text-success ml-2"
+                                               style="display: none;">Copied!</small>
                                     </p>
                                 </div>
 
                                 <div class="card-footer">
-                                    <small class="text-muted">Created by: <span th:text="${c.teacher.name}"></span></small>
+                                    <small class="text-muted">
+                                        Created by: <span th:text="${c.teacher.name}"></span>
+                                    </small>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +140,6 @@
 <script th:src="@{/plugins/chartist/js/chartist.min.js}"></script>
 <script th:src="@{/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js}"></script>
 <script th:src="@{/js/dashboard/dashboard-1.js}"></script>
-
 <script th:src="@{/js/teacher-dashboard.js}"></script>
 
 </body>

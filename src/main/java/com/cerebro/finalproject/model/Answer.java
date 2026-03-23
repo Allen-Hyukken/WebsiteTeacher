@@ -2,7 +2,6 @@ package com.cerebro.finalproject.model;
 
 import jakarta.persistence.*;
 
-// Answer Entity
 @Entity
 @Table(name = "answer")
 public class Answer {
@@ -23,13 +22,22 @@ public class Answer {
     @JoinColumn(name = "choice_id")
     private Choice choice;
 
+    /** Raw text answer for IDENT, TF, ESSAY, CODING questions. */
     @Column(name = "given_text", columnDefinition = "TEXT")
     private String givenText;
 
     @Column(nullable = false)
     private Boolean correct = false;
 
-    // Getters and Setters
+    /**
+     * Manual score for ESSAY questions, stored in its own column.
+     * NULL means not yet graded.
+     */
+    @Column(name = "essay_score")
+    private Double essayScore;
+
+    // ── Getters & Setters ───────────────────────────────────────────────────
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -48,39 +56,31 @@ public class Answer {
     public Boolean getCorrect() { return correct; }
     public void setCorrect(Boolean correct) { this.correct = correct; }
 
-    // Helper method to extract essay score from givenText
-    // Format: "ESSAY_SCORE:5.0|||<actual essay text>"
-    public Double getEssayScore() {
-        if (givenText != null && givenText.startsWith("ESSAY_SCORE:")) {
-            try {
-                int endIndex = givenText.indexOf("|||");
-                if (endIndex > 0) {
-                    String scoreStr = givenText.substring(12, endIndex);
-                    return Double.parseDouble(scoreStr);
-                }
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        return null;
-    }
+    public Double getEssayScore() { return essayScore; }
+    public void setEssayScore(Double essayScore) { this.essayScore = essayScore; }
 
-    // Helper method to get actual essay text without score prefix
+    // ── Thymeleaf helpers ───────────────────────────────────────────────────
+
+    /**
+     * Returns the student's actual essay text.
+     * Also handles the legacy "ESSAY_SCORE:x|||text" encoding
+     * that may exist in rows saved by older code.
+     */
     public String getActualEssayText() {
-        if (givenText != null && givenText.startsWith("ESSAY_SCORE:")) {
-            int startIndex = givenText.indexOf("|||");
-            if (startIndex > 0 && startIndex + 3 < givenText.length()) {
-                return givenText.substring(startIndex + 3);
-            }
+        if (givenText == null) return "";
+        if (givenText.startsWith("ESSAY_SCORE:")) {
+            int sep = givenText.indexOf("|||");
+            return sep >= 0 ? givenText.substring(sep + 3) : givenText;
         }
         return givenText;
     }
 
-    // Helper method to set essay score (stores in givenText with special format)
-    public void setEssayScore(Double score, String essayText) {
-        if (score != null) {
-            this.givenText = "ESSAY_SCORE:" + score + "|||" + (essayText != null ? essayText : "");
-            this.correct = true; // Mark as graded
-        }
+    /**
+     * Applies a teacher's manual grade to this essay answer.
+     * Marks correct=true so it counts toward the attempt score.
+     */
+    public void applyEssayGrade(Double score) {
+        this.essayScore = score;
+        this.correct = (score != null && score > 0);
     }
 }

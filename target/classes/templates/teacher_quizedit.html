@@ -17,6 +17,89 @@
     <link th:href="@{/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/teacher-dashboard.css}" rel="stylesheet">
+
+    <style>
+        /* ── HEADER & NAV FIX ── */
+        .header {
+            background: rgba(8, 20, 45, 0.6) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border-bottom: 1px solid rgba(50, 130, 255, 0.2) !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-header {
+            background: transparent !important;
+            border-right: none !important;
+            width: 100% !important;
+            position: absolute !important;
+        }
+
+        .nav-header .brand-logo {
+            display: none !important; /* Removes Logo */
+        }
+
+        /* Ensure content body accounts for the transparent header */
+        .content-body {
+            background: transparent !important;
+            margin-left: 0 !important;
+            padding-top: 20px;
+        }
+
+        #main-wrapper {
+            background: transparent !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism for existing cards to match the theme */
+        .card {
+            background: linear-gradient(135deg,
+            rgba(8, 20, 45, 0.82) 0%,
+            rgba(15, 35, 75, 0.78) 40%,
+            rgba(20, 55, 100, 0.75) 100%) !important;
+            border: 1px solid rgba(50, 130, 255, 0.25) !important;
+            backdrop-filter: blur(24px) saturate(1.4) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+            color: #e0f0ff !important;
+            border-radius: 15px !important;
+        }
+
+        .card-title, label, .text-muted, h5, h6, p {
+            color: #e0f0ff !important;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(50, 130, 255, 0.2) !important;
+            color: #fff !important;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border-color: #3282ff !important;
+            color: #fff !important;
+        }
+
+        .modal-content {
+            background: #071325 !important;
+            border: 1px solid rgba(50, 130, 255, 0.3) !important;
+            color: #e0f0ff !important;
+            border-radius: 20px !important;
+        }
+
+        .breadcrumb {
+            background: transparent !important;
+            padding-left: 1.5rem;
+        }
+
+        .breadcrumb-item a, .breadcrumb-item.active {
+            color: #e0f0ff !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -39,7 +122,6 @@
 
         <div class="container-fluid">
 
-            <!-- ── Quiz Details ─────────────────────────────────────────────── -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Edit Quiz Details</h4>
@@ -58,7 +140,6 @@
                                       placeholder="Describe the quiz" class="form-control" rows="3"></textarea>
                         </div>
 
-                        <!-- ── Time Limit & Deadline Row ──────────────────── -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -100,14 +181,11 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- ─────────────────────────────────────────────── -->
-
-                        <div class="alert alert-info">
+                        <div class="alert alert-info" style="background: rgba(30, 120, 255, 0.1); border: 1px solid rgba(30, 120, 255, 0.3); color: #fff;">
                             <strong>Total Points:</strong> <span th:text="${quiz.totalPoints}">0</span>
                             (Automatically calculated based on question points)
                         </div>
 
-                        <!-- Current settings summary badge row -->
                         <div class="mb-3">
                             <span th:if="${quiz.timeLimitMinutes != null}" class="badge badge-warning mr-2">
                                 <i class="fa fa-clock-o"></i>
@@ -130,13 +208,12 @@
                 </div>
             </div>
 
-            <!-- ── Questions List ────────────────────────────────────────────── -->
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Questions</h4>
 
                     <div th:if="${!#lists.isEmpty(quiz.questions)}">
-                        <div th:each="q, qi : ${quiz.questions}" class="card mb-3">
+                        <div th:each="q, qi : ${quiz.questions}" class="card mb-3" style="background: rgba(255,255,255,0.03) !important;">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <h5>
@@ -191,7 +268,6 @@
                 </div>
             </div>
 
-            <!-- ── Add Questions Section ────────────────────────────────────── -->
             <div class="card mt-4">
                 <div class="card-body">
                     <h4 class="card-title">Add New Question</h4>
@@ -206,7 +282,6 @@
                 </div>
             </div>
 
-            <!-- ── MCQ Modal ─────────────────────────────────────────────────── -->
             <div class="modal fade" id="modalMCQ" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -246,7 +321,6 @@
                 </div>
             </div>
 
-            <!-- ── True/False Modal ──────────────────────────────────────────── -->
             <div class="modal fade" id="modalTF" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -282,7 +356,6 @@
                 </div>
             </div>
 
-            <!-- ── Identification Modal ──────────────────────────────────────── -->
             <div class="modal fade" id="modalIdent" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -315,7 +388,6 @@
                 </div>
             </div>
 
-            <!-- ── Coding Modal ──────────────────────────────────────────────── -->
             <div class="modal fade" id="modalCoding" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -367,7 +439,6 @@
                 </div>
             </div>
 
-            <!-- ── Essay Modal ───────────────────────────────────────────────── -->
             <div class="modal fade" id="modalEssay" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <form th:action="@{|/teacher/quiz/${quiz.id}/add_question|}" method="post">
@@ -396,9 +467,8 @@
                 </div>
             </div>
 
-            <!-- Back button -->
             <div class="text-center mt-4 mb-5">
-                <a th:href="@{|/teacher/class/${quiz.classRoom.id}|}" class="btn btn-secondary">Back to Class</a>
+                <a th:href="@{|/teacher/class/${quiz.classRoom.id}|}" class="btn btn-secondary" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">Back to Class</a>
             </div>
         </div>
     </div>
@@ -411,18 +481,8 @@
 <script th:src="@{/js/settings.js}"></script>
 <script th:src="@{/js/gleek.js}"></script>
 <script th:src="@{/js/styleSwitcher.js}"></script>
-<script th:src="@{/plugins/chart.js/Chart.bundle.min.js}"></script>
-<script th:src="@{/plugins/circle-progress/circle-progress.min.js}"></script>
-<script th:src="@{/plugins/d3v3/index.js}"></script>
-<script th:src="@{/plugins/topojson/topojson.min.js}"></script>
-<script th:src="@{/plugins/datamaps/datamaps.world.min.js}"></script>
-<script th:src="@{/plugins/raphael/raphael.min.js}"></script>
-<script th:src="@{/plugins/morris/morris.min.js}"></script>
 <script th:src="@{/plugins/moment/moment.min.js}"></script>
 <script th:src="@{/plugins/pg-calendar/js/pignose.calendar.min.js}"></script>
-<script th:src="@{/plugins/chartist/js/chartist.min.js}"></script>
-<script th:src="@{/plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js}"></script>
-<script th:src="@{/js/dashboard/dashboard-1.js}"></script>
 <script th:src="@{/js/teacher-dashboard.js}"></script>
 
 </body>

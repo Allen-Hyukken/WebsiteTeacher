@@ -14,9 +14,176 @@
     <link th:href="@{/plugins/chartist/css/chartist.min.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/teacher-dashboard.css}" rel="stylesheet">
+
+    <style>
+        /* ── BASE RESET ── */
+        body {
+            background-color: #020810 !important;
+            position: relative;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* ── BACKGROUND ANIMATIONS ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                    radial-gradient(ellipse 80% 60% at 50% 50%,
+                    rgba(30, 120, 255, 0.18) 0%,
+                    rgba(0, 200, 255, 0.07) 30%,
+                    transparent 65%),
+                    radial-gradient(ellipse 50% 40% at 50% 50%,
+                    rgba(255, 255, 255, 0.04) 0%,
+                    transparent 60%),
+                    radial-gradient(ellipse 120% 100% at 50% 100%,
+                    rgba(10, 40, 90, 0.6) 0%,
+                    transparent 60%),
+                    linear-gradient(160deg,
+                    #020810 0%,
+                    #060f1e 30%,
+                    #071325 55%,
+                    #040c1a 80%,
+                    #020810 100%);
+            z-index: -2;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0%   { opacity: 0.85; }
+            100% { opacity: 1; }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                    radial-gradient(ellipse 60% 30% at 20% 80%,
+                    rgba(0, 80, 200, 0.12) 0%, transparent 70%),
+                    radial-gradient(ellipse 40% 25% at 80% 20%,
+                    rgba(0, 160, 255, 0.09) 0%, transparent 70%),
+                    radial-gradient(ellipse 35% 20% at 70% 75%,
+                    rgba(20, 60, 140, 0.15) 0%, transparent 60%);
+            z-index: -2;
+            animation: waveShift 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes waveShift {
+            0%   { transform: scale(1) translateY(0px); opacity: 0.6; }
+            100% { transform: scale(1.08) translateY(-12px); opacity: 1; }
+        }
+
+        /* ── PARTICLE CANVAS ── */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ── GRID OVERLAY ── */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background-image:
+                    linear-gradient(rgba(30, 120, 255, 0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(30, 120, 255, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 70% 70% at 50% 50%,
+            transparent 30%, black 100%);
+        }
+
+        /* ── HEADER & NAV FIX ── */
+        .header {
+            background: rgba(8, 20, 45, 0.6) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border-bottom: 1px solid rgba(50, 130, 255, 0.2) !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-header {
+            background: transparent !important;
+            border-right: none !important;
+            width: 100% !important;
+            position: absolute !important;
+        }
+
+        .nav-header .brand-logo {
+            display: none !important; /* Removes Logo */
+        }
+
+        /* ── GLASSMORPHISM CARDS ── */
+        .card {
+            background: linear-gradient(135deg,
+            rgba(8, 20, 45, 0.82) 0%,
+            rgba(15, 35, 75, 0.78) 40%,
+            rgba(20, 55, 100, 0.75) 100%) !important;
+            border: 1px solid rgba(50, 130, 255, 0.25) !important;
+            box-shadow: 0 8px 32px rgba(0, 30, 60, 0.6) !important;
+            backdrop-filter: blur(24px) saturate(1.4) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+            border-radius: 20px !important;
+            color: #e0f0ff !important;
+        }
+
+        .card-title, h3, h4, h6, .text-muted, p, label {
+            color: #e0f0ff !important;
+        }
+
+        .text-muted {
+            opacity: 0.7;
+        }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb {
+            background: transparent !important;
+            padding-left: 1.5rem;
+        }
+        .breadcrumb-item a, .breadcrumb-item.active { color: #e0f0ff !important; }
+
+        /* ── TABLES ── */
+        .table { color: #e0f0ff !important; }
+        .table-bordered { border: 1px solid rgba(50, 130, 255, 0.2) !important; }
+        .thead-dark th {
+            background-color: rgba(0, 20, 50, 0.8) !important;
+            border-color: rgba(50, 130, 255, 0.3) !important;
+            color: #fff !important;
+        }
+        .table-striped tbody tr:nth-of-type(odd) { background-color: rgba(255, 255, 255, 0.03) !important; }
+        .table-hover tbody tr:hover { background-color: rgba(255, 255, 255, 0.07) !important; }
+
+        /* ── STATS BOXES ── */
+        .border.rounded { border: 1px solid rgba(50, 130, 255, 0.3) !important; background: rgba(255,255,255,0.02); }
+
+        /* ── LAYOUT ── */
+        .content-body {
+            background: transparent !important;
+            margin-left: 0 !important;
+            padding-top: 20px;
+        }
+        #main-wrapper {
+            background: transparent !important;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
 
 <body>
+
+<div class="grid-overlay"></div>
+<canvas id="particles-canvas"></canvas>
+
 <div id="main-wrapper">
     <div th:replace="fragments/navheader-teacher :: navheader-teacher"></div>
     <div th:replace="fragments/header :: header"></div>
@@ -34,7 +201,6 @@
 
         <div class="container-fluid">
 
-            <!-- ── Flash messages ────────────────────────────────────────────── -->
             <div th:if="${success}" class="alert alert-success alert-dismissible fade show">
                 <i class="fa fa-check-circle"></i> <span th:text="${success}"></span>
                 <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
@@ -44,7 +210,6 @@
                 <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
             </div>
 
-            <!-- ── Quiz Info Card ─────────────────────────────────────────────── -->
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start flex-wrap">
@@ -54,7 +219,6 @@
                                th:if="${quiz.description != null and !#strings.isEmpty(quiz.description)}"
                                th:text="${quiz.description}"></p>
 
-                            <!-- Setting badges -->
                             <div class="mb-2">
                                 <span th:if="${quiz.timeLimitMinutes != null}" class="badge badge-warning mr-1">
                                     <i class="fa fa-clock-o"></i>
@@ -73,7 +237,6 @@
                             </div>
                         </div>
 
-                        <!-- ── Show/Hide Answers Toggle ────────────────────── -->
                         <div class="mt-2">
                             <form th:action="@{|/teacher/quiz/${quiz.id}/toggle-answers|}"
                                   method="post" style="display:inline;">
@@ -88,9 +251,8 @@
                         </div>
                     </div>
 
-                    <hr/>
+                    <hr style="border-top: 1px solid rgba(255,255,255,0.1);"/>
 
-                    <!-- ── Quick stats row ──────────────────────────────── -->
                     <div class="row text-center">
                         <div class="col-6 col-md-3 mb-2">
                             <div class="p-3 border rounded">
@@ -121,10 +283,9 @@
                 </div>
             </div>
 
-            <!-- ── Score summary cards (only when there are attempts) ───────── -->
             <div class="row mb-4" th:if="${attempts != null and !#lists.isEmpty(attempts)}">
                 <div class="col-md-4 mb-3">
-                    <div class="card bg-primary text-white h-100">
+                    <div class="card bg-primary text-white h-100" style="background: rgba(30, 120, 255, 0.4) !important;">
                         <div class="card-body">
                             <h6 class="card-title text-white"><i class="fa fa-trophy"></i> Highest Score</h6>
                             <h2 class="text-white mb-0"
@@ -135,7 +296,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="card bg-warning text-white h-100">
+                    <div class="card bg-warning text-white h-100" style="background: rgba(255, 193, 7, 0.3) !important;">
                         <div class="card-body">
                             <h6 class="card-title text-white"><i class="fa fa-arrow-down"></i> Lowest Score</h6>
                             <h2 class="text-white mb-0"
@@ -146,13 +307,13 @@
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="card bg-info text-white h-100">
+                    <div class="card bg-info text-white h-100" style="background: rgba(23, 162, 184, 0.3) !important;">
                         <div class="card-body">
                             <h6 class="card-title text-white"><i class="fa fa-users"></i> Score Distribution</h6>
-                            <div class="d-flex flex-wrap">
+                            <div class="d-flex flex-wrap mt-2">
                                 <div class="mr-3"><span class="badge badge-success" th:text="${excellentCount}">0</span> Excellent</div>
                                 <div class="mr-3"><span class="badge badge-info"    th:text="${goodCount}">0</span> Good</div>
-                                <div class="mr-3"><span class="badge badge-warning" th:text="${averageCount}">0</span> Average</div>
+                                <div class="mr-3"><span class="badge badge-warning" th:text="${averageCount}">0</span> Avg</div>
                                 <div>           <span class="badge badge-danger"  th:text="${poorCount}">0</span> Poor</div>
                             </div>
                         </div>
@@ -160,7 +321,6 @@
                 </div>
             </div>
 
-            <!-- ── Attempts Table ─────────────────────────────────────────────── -->
             <div class="card mb-4">
                 <div class="card-body">
                     <h4 class="card-title">Student Attempts</h4>
@@ -208,7 +368,6 @@
                                 <td th:text="${a.submittedAt != null
                                                 ? #temporals.format(a.submittedAt, 'MMM dd, yyyy HH:mm') : '—'}">Date</td>
 
-                                <!-- Essay grading status per attempt -->
                                 <td>
                                     <span th:each="ans : ${a.answers}"
                                           th:if="${ans.question.type.name() == 'ESSAY' and ans.essayScore == null}"
@@ -216,7 +375,7 @@
                                         <i class="fa fa-pencil"></i> Needs Grading
                                     </span>
                                     <span th:if="${#lists.isEmpty(a.answers.?[question.type.name() == 'ESSAY' and essayScore == null])}"
-                                          class="badge badge-secondary">
+                                          class="badge badge-secondary" style="opacity: 0.6;">
                                         <i class="fa fa-check"></i> OK
                                     </span>
                                 </td>
@@ -234,48 +393,8 @@
                 </div>
             </div>
 
-            <!-- ── Distribution detail ──────────────────────────────────────── -->
-            <div class="row mb-4" th:if="${attempts != null and !#lists.isEmpty(attempts)}">
-                <div class="col-md-3 mb-3">
-                    <div class="card border-success text-center">
-                        <div class="card-body py-3">
-                            <h6 class="text-success mb-1">Excellent (≥ 90%)</h6>
-                            <h3 class="mb-0" th:text="${excellentCount}">0</h3>
-                            <small class="text-muted">students</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card border-info text-center">
-                        <div class="card-body py-3">
-                            <h6 class="text-info mb-1">Good (80–89%)</h6>
-                            <h3 class="mb-0" th:text="${goodCount}">0</h3>
-                            <small class="text-muted">students</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card border-warning text-center">
-                        <div class="card-body py-3">
-                            <h6 class="text-warning mb-1">Average (70–79%)</h6>
-                            <h3 class="mb-0" th:text="${averageCount}">0</h3>
-                            <small class="text-muted">students</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="card border-danger text-center">
-                        <div class="card-body py-3">
-                            <h6 class="text-danger mb-1">Poor (&lt; 70%)</h6>
-                            <h3 class="mb-0" th:text="${poorCount}">0</h3>
-                            <small class="text-muted">students</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="text-center mb-5">
-                <a th:href="@{|/teacher/class/${quiz.classRoom.id}|}" class="btn btn-secondary">
+                <a th:href="@{|/teacher/class/${quiz.classRoom.id}|}" class="btn btn-secondary" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                     <i class="fa fa-arrow-left"></i> Back to Class
                 </a>
             </div>
@@ -290,9 +409,67 @@
 <script th:src="@{/js/settings.js}"></script>
 <script th:src="@{/js/gleek.js}"></script>
 <script th:src="@{/js/styleSwitcher.js}"></script>
-<script th:src="@{/plugins/chart.js/Chart.bundle.min.js}"></script>
-<script th:src="@{/plugins/circle-progress/circle-progress.min.js}"></script>
-<script th:src="@{/plugins/chartist/js/chartist.min.js}"></script>
-<script th:src="@{/js/dashboard/dashboard-1.js}"></script>
+
+<script>
+    (function () {
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, particles = [];
+
+        function resize() {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = Math.max(document.documentElement.scrollHeight, window.innerHeight);
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const COUNT = 72;
+        const COLORS = ['rgba(80,160,255,', 'rgba(120,200,255,', 'rgba(200,230,255,', 'rgba(30,100,220,'];
+
+        for (let i = 0; i < COUNT; i++) {
+            particles.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                r: Math.random() * 1.6 + 0.3,
+                dx: (Math.random() - 0.5) * 0.35,
+                dy: (Math.random() - 0.5) * 0.35,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                alpha: Math.random() * 0.5 + 0.15,
+                pulse: Math.random() * Math.PI * 2,
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            particles.forEach(p => {
+                p.pulse += 0.012;
+                const a = p.alpha + Math.sin(p.pulse) * 0.12;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.color + Math.min(1, Math.max(0, a)) + ')';
+                ctx.fill();
+
+                particles.forEach(q => {
+                    const dist = Math.hypot(p.x - q.x, p.y - q.y);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.strokeStyle = `rgba(60,130,255,${0.06 * (1 - dist / 130)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                });
+
+                p.x += p.dx; p.y += p.dy;
+                if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+                if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+    })();
+</script>
+
 </body>
 </html>

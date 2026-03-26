@@ -9,11 +9,179 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
     <link th:href="@{/css/style.css}" rel="stylesheet">
-
     <link th:href="@{/css/auth-pages.css}" rel="stylesheet">
+
+    <style>
+
+        /* ── BASE RESET ── */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* ── BACKGROUND CANVAS ── */
+        body {
+            background-color: #020810 !important;
+            position: relative;
+        }
+
+        /* Deep obsidian base + radial electric-blue pulse */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                    radial-gradient(ellipse 80% 60% at 50% 50%,
+                    rgba(30, 120, 255, 0.18) 0%,
+                    rgba(0, 200, 255, 0.07) 30%,
+                    transparent 65%),
+                    radial-gradient(ellipse 50% 40% at 50% 50%,
+                    rgba(255, 255, 255, 0.04) 0%,
+                    transparent 60%),
+                    radial-gradient(ellipse 120% 100% at 50% 100%,
+                    rgba(10, 40, 90, 0.6) 0%,
+                    transparent 60%),
+                    linear-gradient(160deg,
+                    #020810 0%,
+                    #060f1e 30%,
+                    #071325 55%,
+                    #040c1a 80%,
+                    #020810 100%);
+            z-index: 0;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0%   { opacity: 0.85; }
+            100% { opacity: 1; }
+        }
+
+        /* Fluid organic wave layer */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                    radial-gradient(ellipse 60% 30% at 20% 80%,
+                    rgba(0, 80, 200, 0.12) 0%, transparent 70%),
+                    radial-gradient(ellipse 40% 25% at 80% 20%,
+                    rgba(0, 160, 255, 0.09) 0%, transparent 70%),
+                    radial-gradient(ellipse 35% 20% at 70% 75%,
+                    rgba(20, 60, 140, 0.15) 0%, transparent 60%);
+            z-index: 0;
+            animation: waveShift 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes waveShift {
+            0%   { transform: scale(1) translateY(0px); opacity: 0.6; }
+            100% { transform: scale(1.08) translateY(-12px); opacity: 1; }
+        }
+
+        /* ── PARTICLE CANVAS ── */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ── GRID OVERLAY ── */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image:
+                    linear-gradient(rgba(30, 120, 255, 0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(30, 120, 255, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 70% 70% at 50% 50%,
+            transparent 30%, black 100%);
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .login-form-bg {
+            background: transparent !important;
+            background-image: none !important;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── CARD ── */
+        .card.login-form {
+            background: linear-gradient(135deg,
+            rgba(8, 20, 45, 0.82) 0%,
+            rgba(15, 35, 75, 0.78) 40%,
+            rgba(20, 55, 100, 0.75) 100%) !important;
+            border: 1px solid rgba(50, 130, 255, 0.25) !important;
+            box-shadow:
+                    0 8px 32px rgba(0, 30, 60, 0.6),
+                    0 16px 48px rgba(0, 20, 50, 0.5),
+                    0 32px 80px rgba(0, 10, 40, 0.4),
+                    0 2px 8px rgba(0, 50, 100, 0.7),
+                    0 0 0 1px rgba(100, 180, 255, 0.08) inset,
+                    0 0 60px rgba(30, 100, 255, 0.12) !important;
+            border-radius: 20px !important;
+            backdrop-filter: blur(24px) saturate(1.4) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+        }
+
+        /* Subtle top-edge highlight (glassmorphism) */
+        .card.login-form::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 10%; right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg,
+            transparent,
+            rgba(150, 210, 255, 0.5),
+            transparent);
+            border-radius: 50%;
+        }
+
+        /* ── TYPOGRAPHY ── */
+        .card.login-form h3,
+        .card.login-form a h3,
+        .card.login-form a,
+        .card.login-form .register-heading {
+            color: #e0f0ff !important;
+            letter-spacing: 0.05em;
+        }
+
+        .card.login-form .login-form__footer {
+            color: #6a9ec8 !important;
+        }
+
+        /* ── INPUTS ── */
+        .card.login-form .form-control {
+            background-color: rgba(255, 255, 255, 0.06) !important;
+            border-bottom: 1px solid rgba(74, 144, 217, 0.5) !important;
+            color: #e0f0ff !important;
+            transition: all 0.3s ease;
+        }
+
+        .card.login-form .form-control::placeholder {
+            color: #4a7a9b !important;
+        }
+
+        .card.login-form .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            border-bottom: 1px solid rgba(116, 192, 252, 0.9) !important;
+            box-shadow: 0 4px 12px rgba(30, 120, 255, 0.15) !important;
+        }
+
+    </style>
 </head>
 
 <body class="h-100">
+
+<!-- Subtle grid overlay -->
+<div class="grid-overlay"></div>
+
+<!-- Particle canvas -->
+<canvas id="particles-canvas"></canvas>
 
 <div class="login-form-bg h-100">
     <div class="container h-100">
@@ -88,8 +256,83 @@
 <script th:src="@{/js/settings.js}"></script>
 <script th:src="@{/js/gleek.js}"></script>
 <script th:src="@{/js/styleSwitcher.js}"></script>
-
 <script th:src="@{/js/auth-pages.js}"></script>
+
+<!-- ── MICRO-PARTICLE SYSTEM ── -->
+<script>
+    (function () {
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H, particles = [];
+
+        function resize() {
+            W = canvas.width  = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const COUNT = 72;
+        const COLORS = [
+            'rgba(80,160,255,',
+            'rgba(120,200,255,',
+            'rgba(200,230,255,',
+            'rgba(30,100,220,',
+        ];
+
+        for (let i = 0; i < COUNT; i++) {
+            particles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                r: Math.random() * 1.6 + 0.3,
+                dx: (Math.random() - 0.5) * 0.35,
+                dy: (Math.random() - 0.5) * 0.35,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                alpha: Math.random() * 0.5 + 0.15,
+                pulse: Math.random() * Math.PI * 2,
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+
+            particles.forEach(p => {
+                p.pulse += 0.012;
+                const a = p.alpha + Math.sin(p.pulse) * 0.12;
+
+                // Draw particle
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.color + Math.min(1, Math.max(0, a)) + ')';
+                ctx.fill();
+
+                // Draw connections
+                particles.forEach(q => {
+                    const dist = Math.hypot(p.x - q.x, p.y - q.y);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(q.x, q.y);
+                        ctx.strokeStyle = `rgba(60,130,255,${0.06 * (1 - dist / 130)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                });
+
+                p.x += p.dx;
+                p.y += p.dy;
+                if (p.x < 0) p.x = W;
+                if (p.x > W) p.x = 0;
+                if (p.y < 0) p.y = H;
+                if (p.y > H) p.y = 0;
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    })();
+</script>
 
 </body>
 </html>

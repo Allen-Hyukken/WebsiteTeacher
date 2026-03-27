@@ -36,16 +36,17 @@
             border-bottom: 1px solid rgba(50, 130, 255, 0.2) !important;
         }
 
+        /* Remove Large Background Logo and Nav Logo */
+        .nav-header .brand-logo img,
+        .nav-header .brand-logo {
+            display: none !important;
+        }
+
         /* Heading Text Glow */
         .header-content h1, .nav-header .brand-title, .brand-logo h3 {
             color: #e0f0ff !important;
             text-shadow: 0 0 15px rgba(60, 150, 255, 0.6);
             font-weight: 700;
-        }
-
-        /* Remove Large Background Logo and Nav Logo */
-        .nav-header .brand-logo img, .brand-logo, [class*="logo"] {
-            display: none !important;
         }
 
         /* ── BACKGROUND CANVAS ── */
@@ -167,6 +168,21 @@
             border-color: rgba(116, 192, 252, 0.9) !important;
             box-shadow: 0 4px 12px rgba(30, 120, 255, 0.15) !important;
         }
+
+        .header {
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+        }
+
+        .header-content {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
 
     </style>
 </head>

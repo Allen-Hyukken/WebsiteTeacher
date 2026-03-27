@@ -2,26 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-name" content="quixlab" />
-
-    <title>Student Dashboard - Quiz App</title>
-
-    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon.png}">
-    <link th:href="@{/plugins/pg-calendar/css/pignose.calendar.min.css}" rel="stylesheet">
-    <link th:href="@{/plugins/chartist/css/chartist.min.css}" rel="stylesheet">
-    <link th:href="@{/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css}" rel="stylesheet">
-    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
 
-<!--**********************************
-    Footer Fragment
-***********************************-->
-<div th:fragment="footer" class="footer">
+<div th:fragment="footer" class="footer" style="background: transparent !important; margin-left: 0 !important; width: 100% !important; padding: 30px 0 !important; clear: both !important; display: block !important; position: relative !important; z-index: 1;">
+    <style>
+        /* Force override for Quixlab specific classes */
+        .footer {
+            background: transparent !important;
+            margin-left: 0 !important;
+            padding-left: 0 !important;
+            border-top: 1px solid rgba(50, 130, 255, 0.1) !important;
+            width: 100% !important;
+        }
+
+        .footer .copyright {
+            background: transparent !important;
+            text-align: center !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        .footer .copyright p {
+            color: rgba(224, 240, 255, 0.6) !important;
+            margin: 0 !important;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive fix: siguraduhin na walang pilit na margin ang dashboard */
+        @media (min-width: 768px) {
+            #main-wrapper .footer {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+        }
+    </style>
     <div class="copyright">
-        <p>Copyright &copy; <span th:text="${#dates.year(#dates.createNow())}">2025</span> Cerebro Metron. All Rights Reserved.</p>
+        <p>Copyright &copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> Cerebro Metron. All Rights Reserved.</p>
     </div>
 </div>
 

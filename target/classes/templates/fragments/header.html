@@ -136,15 +136,22 @@
         }
 
         .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            position: relative !important;
         }
 
         #cerebra1 {
             color: #e0f0ff !important;
             text-shadow: 0 0 15px rgba(60, 150, 255, 0.6);
-            margin: 0;
+            margin: 0 auto !important;
+            position: absolute !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            white-space: nowrap;
         }
 
         .header-left {
@@ -159,14 +166,38 @@
             text-rendering: auto;
             -webkit-font-smoothing: antialiased;
         }
+
+        .header-content {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            position: relative !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+
+        #cerebra1 {
+            color: #e0f0ff !important;
+            text-shadow: 0 0 15px rgba(60, 150, 255, 0.6);
+            margin: 0 !important;
+            position: absolute !important;
+            left: 0 !important;
+            right: 0 !important;
+            text-align: center !important;
+            width: 100% !important;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
 <div th:fragment="header" class="header">
-    <div class="header-content clearfix">
-        <h3 id="cerebra1">Cerebro Metron</h3>
-        <div class="header-left">
+    <div class="header-content clearfix" style="position: relative; display: flex; align-items: center; justify-content: center;">
+
+        <!-- Hamburger - absolute left -->
+        <div class="header-left" style="position: absolute; left: 15px;">
             <div class="nav-control">
                 <div class="hamburger">
                     <span class="toggle-icon"><i class="fa fa-bars"></i></span>
@@ -174,11 +205,14 @@
             </div>
         </div>
 
-        <div class="header-right">
+        <!-- Centered Title -->
+        <h3 id="cerebra1" style="margin: 0; text-align: center;">Cerebro Metron</h3>
+
+        <!-- Gear icon - absolute right -->
+        <div class="header-right" style="position: absolute; right: 15px;">
             <ul class="clearfix">
                 <li class="icons dropdown">
                     <div class="user-img c-pointer position-relative" data-toggle="dropdown" style="border: none !important;">
-                        <span class="activity active"></span>
                         <img th:src="@{/images/imgs/12.png}" height="40" width="40" alt="Settings" style="border: none !important; box-shadow: none !important;">
                     </div>
                     <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/auth-pages.css}" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
 
     <style>
 
@@ -293,6 +294,10 @@
             });
         }
 
+        /* Expose particles for theme switching */
+        window.__cmParticles = particles;
+        window.__cmConnColor = 'rgba(60,130,255,';
+
         function draw() {
             ctx.clearRect(0, 0, W, H);
 
@@ -313,7 +318,7 @@
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y);
                         ctx.lineTo(q.x, q.y);
-                        ctx.strokeStyle = `rgba(60,130,255,${0.06 * (1 - dist / 130)})`;
+                        ctx.strokeStyle = `${window.__cmConnColor || 'rgba(60,130,255,'}${0.06 * (1 - dist / 130)})`;
                         ctx.lineWidth = 0.5;
                         ctx.stroke();
                     }
@@ -334,5 +339,6 @@
     })();
 </script>
 
+<script th:src="@{/js/theme.js}"></script>
 </body>
 </html>

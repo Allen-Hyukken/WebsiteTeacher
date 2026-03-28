@@ -610,3 +610,180 @@ body.light-mode #cm-theme-toggle:hover {
     transform: scale(1.12) rotate(-15deg);
     box-shadow: 0 6px 24px rgba(20,60,180,0.5);
 }
+
+/* ===================================================================
+   LIGHT MODE — DROPDOWN / SETTINGS / LOGOUT MENU FIX
+   =================================================================== */
+
+body.light-mode .dropdown-menu {
+    background: #ffffff !important;
+    border: 1px solid rgba(100, 150, 220, 0.2) !important;
+    box-shadow: 0 8px 24px rgba(80, 120, 200, 0.14), 0 2px 8px rgba(80, 120, 200, 0.08) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.light-mode .dropdown-menu .dropdown-header,
+body.light-mode .dropdown-menu .dropdown-item,
+body.light-mode .dropdown-menu a,
+body.light-mode .dropdown-menu li,
+body.light-mode .dropdown-menu span,
+body.light-mode .dropdown-menu p {
+    color: #1a2a4a !important;
+    background-color: transparent !important;
+    text-shadow: none !important;
+}
+
+body.light-mode .dropdown-menu .dropdown-item:hover,
+body.light-mode .dropdown-menu .dropdown-item:focus,
+body.light-mode .dropdown-menu a:hover,
+body.light-mode .dropdown-menu a:focus {
+    background-color: rgba(80, 130, 255, 0.07) !important;
+    color: #2a50c8 !important;
+}
+
+body.light-mode .dropdown-menu .dropdown-divider {
+    border-top-color: rgba(100, 150, 220, 0.15) !important;
+}
+
+/* Header-right icon dropdown (gear/settings icon) */
+body.light-mode .header-right .dropdown-menu,
+body.light-mode .header-right .drop-down {
+    background: #ffffff !important;
+    border: 1px solid rgba(100, 150, 220, 0.18) !important;
+    box-shadow: 0 8px 28px rgba(80, 120, 200, 0.15) !important;
+}
+
+body.light-mode .header-right .dropdown-menu a,
+body.light-mode .header-right .dropdown-menu .dropdown-item,
+body.light-mode .header-right .dropdown-menu span,
+body.light-mode .header-right .dropdown-menu li {
+    color: #1a2a4a !important;
+    background: transparent !important;
+    text-shadow: none !important;
+}
+
+body.light-mode .header-right .dropdown-menu a:hover,
+body.light-mode .header-right .dropdown-menu .dropdown-item:hover {
+    background: rgba(80, 130, 255, 0.07) !important;
+    color: #2a50c8 !important;
+}
+
+/* Logout / sign-out button specifically */
+body.light-mode .dropdown-menu [href*="logout"],
+body.light-mode .dropdown-menu [href*="signout"],
+body.light-mode .dropdown-menu [href*="sign-out"],
+body.light-mode .dropdown-menu form button,
+body.light-mode .dropdown-menu .logout-btn {
+    color: #c02020 !important;
+    background: transparent !important;
+}
+
+body.light-mode .dropdown-menu [href*="logout"]:hover,
+body.light-mode .dropdown-menu form button:hover {
+    background: rgba(200, 50, 50, 0.07) !important;
+    color: #a01010 !important;
+}
+
+/* ===================================================================
+   DARK MODE — FOOTER FIX
+   The base style.css hardcodes .footer { background: #fff } so we
+   must override it for dark mode (default) AND keep light mode white.
+   =================================================================== */
+
+/* Dark mode footer (default) */
+body:not(.light-mode) .footer,
+body:not(.light-mode) .footer .copyright {
+    background: rgba(4, 12, 30, 0.85) !important;
+    border-top: 1px solid rgba(50, 130, 255, 0.15) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+body:not(.light-mode) .footer .copyright p,
+body:not(.light-mode) .footer .copyright a,
+body:not(.light-mode) .footer p,
+body:not(.light-mode) .footer a,
+body:not(.light-mode) .footer span {
+    color: rgba(180, 210, 255, 0.65) !important;
+    text-shadow: none !important;
+}
+
+body:not(.light-mode) .footer .copyright a:hover,
+body:not(.light-mode) .footer a:hover {
+    color: #7f9fff !important;
+}
+
+/* Light mode footer stays clean white */
+body.light-mode .footer,
+body.light-mode .footer .copyright {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-top: 1px solid rgba(100, 150, 220, 0.15) !important;
+    backdrop-filter: none !important;
+}
+
+body.light-mode .footer .copyright p,
+body.light-mode .footer p {
+    color: #6a8ab0 !important;
+}
+
+body.light-mode .footer .copyright a,
+body.light-mode .footer a {
+    color: #2a50c8 !important;
+}
+
+/* ===================================================================
+   LIGHT MODE — TABLE THEAD DARK NAVY FIX
+   =================================================================== */
+
+body.light-mode .table thead,
+body.light-mode .table thead tr,
+body.light-mode .table > thead,
+body.light-mode thead,
+body.light-mode .thead-dark,
+body.light-mode .thead-dark th,
+body.light-mode table thead {
+    background: rgba(80, 130, 220, 0.09) !important;
+    background-color: rgba(80, 130, 220, 0.09) !important;
+}
+
+body.light-mode .table thead th,
+body.light-mode .thead-dark th,
+body.light-mode table thead th,
+body.light-mode table thead td {
+    color: #1a2a4a !important;
+    background: rgba(80, 130, 220, 0.09) !important;
+    background-color: rgba(80, 130, 220, 0.09) !important;
+    border-color: rgba(100, 150, 220, 0.15) !important;
+    text-shadow: none !important;
+}
+
+/* ===================================================================
+   LIGHT MODE — STAT CARD NUMBERS VISIBILITY FIX
+   =================================================================== */
+
+body.light-mode .card h2,
+body.light-mode .card h3,
+body.light-mode .card h4,
+body.light-mode .card .h2,
+body.light-mode .card .h3,
+body.light-mode .card .h4,
+body.light-mode .card-body h2,
+body.light-mode .card-body h3,
+body.light-mode .card-body h4,
+body.light-mode .card-body .display-4,
+body.light-mode .card-body [class*="display-"],
+body.light-mode .card-body .stat-number,
+body.light-mode .card-body .count,
+body.light-mode .card-body strong,
+body.light-mode .card-body b {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+}
+
+/* Catch any large number text that might be a span or p */
+body.light-mode .card-body p,
+body.light-mode .card-body span:not(.badge) {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+}

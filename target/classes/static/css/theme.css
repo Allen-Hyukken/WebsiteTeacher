@@ -1,0 +1,612 @@
+/* ============================================================
+   CEREBRO METRON — THEME SYSTEM (Dark / Light)
+   ============================================================ */
+
+/* ── CSS VARIABLES ─────────────────────────────────────────── */
+:root {
+    --cm-bg-base:          #020810;
+    --cm-bg-grad-1:        rgba(30, 120, 255, 0.18);
+    --cm-bg-grad-2:        rgba(0, 200, 255, 0.07);
+    --cm-bg-grad-3:        rgba(10, 40, 90, 0.6);
+    --cm-bg-dark-1:        #020810;
+    --cm-bg-dark-2:        #060f1e;
+    --cm-bg-dark-3:        #071325;
+    --cm-bg-dark-4:        #040c1a;
+
+    --cm-card-bg:          linear-gradient(135deg, rgba(8,20,45,0.82) 0%, rgba(15,35,75,0.78) 40%, rgba(20,55,100,0.75) 100%);
+    --cm-card-border:      rgba(50, 130, 255, 0.25);
+    --cm-card-shadow:      0 8px 32px rgba(0,30,60,0.6);
+    --cm-card-hover-shadow:0 16px 40px rgba(30,100,255,0.25);
+    --cm-card-hover-border:rgba(80,160,255,0.35);
+
+    --cm-text-primary:     #e0f0ff;
+    --cm-text-secondary:   rgba(180,210,255,0.75);
+    --cm-text-muted:       rgba(180,210,255,0.55);
+
+    --cm-input-bg:         rgba(255,255,255,0.06);
+    --cm-input-border:     rgba(74,144,217,0.5);
+    --cm-input-focus-bg:   rgba(255,255,255,0.10);
+    --cm-input-focus-border: rgba(116,192,252,0.9);
+    --cm-input-placeholder: #4a7a9b;
+
+    --cm-nav-bg:           rgba(8,20,45,0.70);
+    --cm-nav-border:       rgba(50,130,255,0.20);
+
+    --cm-table-head-bg:    rgba(127,127,255,0.3);
+    --cm-table-row-hover:  rgba(127,127,255,0.2);
+    --cm-table-stripe:     rgba(255,255,255,0.03);
+    --cm-table-border:     rgba(50,130,255,0.15);
+
+    --cm-badge-time-bg:    rgba(200,150,10,0.18);
+    --cm-badge-time-border:rgba(255,200,50,0.35);
+    --cm-badge-time-color: #ffc940;
+    --cm-badge-due-bg:     rgba(200,40,40,0.18);
+    --cm-badge-due-border: rgba(255,80,80,0.35);
+    --cm-badge-due-color:  #ff6b6b;
+
+    --cm-btn-edit-bg:      rgba(80,120,255,0.25);
+    --cm-btn-edit-border:  rgba(100,150,255,0.4);
+    --cm-btn-edit-color:   #a8c8ff;
+    --cm-btn-results-bg:   rgba(0,180,200,0.22);
+    --cm-btn-results-border:rgba(0,200,220,0.35);
+    --cm-btn-results-color:#5de0f0;
+
+    --cm-modal-bg:         rgba(24,40,72,0.95);
+    --cm-modal-border:     rgba(255,255,255,0.3);
+
+    --cm-hr:               rgba(50,130,255,0.15);
+    --cm-grid-line:        rgba(30,120,255,0.04);
+    --cm-particle-1:       rgba(80,160,255);
+    --cm-particle-2:       rgba(120,200,255);
+    --cm-particle-3:       rgba(200,230,255);
+    --cm-particle-4:       rgba(30,100,220);
+    --cm-particle-conn:    rgba(60,130,255);
+
+    --cm-quiz-icon-bg:     linear-gradient(135deg,#3a5bd9 0%,#2d47b0 100%);
+    --cm-quiz-divider:     rgba(50,130,255,0.15);
+
+    --cm-alert-success-bg: rgba(40,167,69,0.2);
+    --cm-alert-success-border: #28a745;
+    --cm-alert-danger-bg:  rgba(220,53,69,0.2);
+    --cm-alert-danger-border: #dc3545;
+
+    --cm-breadcrumb-color: #e0f0ff;
+    --cm-link-color:       #7f7fff;
+
+    --cm-footer-color:     #6a9ec8;
+    --cm-scrollbar-track:  rgba(2,8,16,0.5);
+    --cm-scrollbar-thumb:  rgba(50,130,255,0.4);
+}
+
+/* ── LIGHT MODE CSS VARIABLE OVERRIDES ──────────────────────── */
+body.light-mode {
+    --cm-bg-base:          #e8eef8;
+    --cm-card-bg:          linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(240,248,255,0.96) 100%);
+    --cm-card-border:      rgba(100,150,230,0.2);
+    --cm-card-shadow:      0 4px 20px rgba(80,120,200,0.1);
+    --cm-card-hover-shadow:0 12px 32px rgba(80,130,220,0.18);
+    --cm-card-hover-border:rgba(100,160,255,0.4);
+    --cm-text-primary:     #1a2a4a;
+    --cm-text-secondary:   #2a4070;
+    --cm-text-muted:       #4a6090;
+    --cm-input-bg:         rgba(255,255,255,0.95);
+    --cm-input-border:     rgba(100,150,230,0.4);
+    --cm-input-focus-bg:   #ffffff;
+    --cm-input-focus-border: rgba(80,130,255,0.8);
+    --cm-input-placeholder: #7a9cc0;
+    --cm-nav-bg:           rgba(255,255,255,0.92);
+    --cm-nav-border:       rgba(100,150,230,0.2);
+    --cm-table-head-bg:    rgba(100,140,220,0.12);
+    --cm-table-row-hover:  rgba(100,150,255,0.08);
+    --cm-table-stripe:     rgba(100,150,255,0.03);
+    --cm-table-border:     rgba(100,150,230,0.15);
+    --cm-modal-bg:         rgba(248,252,255,0.99);
+    --cm-modal-border:     rgba(100,150,230,0.25);
+    --cm-hr:               rgba(100,150,220,0.18);
+    --cm-breadcrumb-color: #1a2a4a;
+    --cm-link-color:       #2a50cc;
+    --cm-footer-color:     #3a5a8a;
+    --cm-scrollbar-track:  rgba(200,220,245,0.6);
+    --cm-scrollbar-thumb:  rgba(80,130,220,0.3);
+    --cm-light-particles:  1;
+}
+body:not(.light-mode) { --cm-light-particles: 0; }
+
+/* ── SCROLLBAR ──────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cm-scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--cm-scrollbar-thumb); border-radius: 3px; }
+
+/* ===================================================================
+   DARK MODE BASE STYLES (using CSS vars)
+   =================================================================== */
+body {
+    background-color: var(--cm-bg-base) !important;
+    transition: background-color 0.4s ease;
+}
+
+body::before {
+    background:
+            radial-gradient(ellipse 80% 60% at 50% 50%, var(--cm-bg-grad-1, rgba(30,120,255,0.18)) 0%, var(--cm-bg-grad-2, rgba(0,200,255,0.07)) 30%, transparent 65%),
+            radial-gradient(ellipse 120% 100% at 50% 100%, var(--cm-bg-grad-3, rgba(10,40,90,0.6)) 0%, transparent 60%),
+            linear-gradient(160deg, var(--cm-bg-dark-1, #020810) 0%, var(--cm-bg-dark-2, #060f1e) 30%, var(--cm-bg-dark-3, #071325) 55%, var(--cm-bg-dark-4, #040c1a) 80%, var(--cm-bg-dark-1, #020810) 100%) !important;
+    transition: background 0.4s ease;
+}
+
+.card {
+    background: var(--cm-card-bg) !important;
+    border: 1px solid var(--cm-card-border) !important;
+    box-shadow: var(--cm-card-shadow) !important;
+    transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
+}
+.card:hover {
+    box-shadow: var(--cm-card-hover-shadow) !important;
+    border-color: var(--cm-card-hover-border) !important;
+}
+
+h3, h4, h5, h6, .card-title, label, p,
+.text-muted, strong, small.text-muted, .form-text,
+ul li, th, td, .breadcrumb-item, .breadcrumb-item a, .breadcrumb-item.active {
+    color: var(--cm-text-primary) !important;
+    transition: color 0.4s ease;
+}
+.text-muted, small.text-muted, .form-text {
+    color: var(--cm-text-muted) !important;
+}
+
+.header, .nav-header {
+    background: var(--cm-nav-bg) !important;
+    border-bottom: 1px solid var(--cm-nav-border) !important;
+    transition: background 0.4s ease;
+}
+
+.form-control, textarea.form-control, input.form-control, select.form-control {
+    background: var(--cm-input-bg) !important;
+    border-color: var(--cm-input-border) !important;
+    color: var(--cm-text-primary) !important;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.form-control:focus, textarea.form-control:focus {
+    background: var(--cm-input-focus-bg) !important;
+    border-color: var(--cm-input-focus-border) !important;
+    color: var(--cm-text-primary) !important;
+}
+.form-control::placeholder { color: var(--cm-input-placeholder) !important; }
+
+.table { color: var(--cm-text-primary) !important; }
+.table thead th { color: var(--cm-text-primary) !important; }
+.table tbody td { color: var(--cm-text-primary) !important; }
+.table thead { background: var(--cm-table-head-bg) !important; }
+.table tbody tr:hover { background: var(--cm-table-row-hover) !important; }
+.table-striped tbody tr:nth-of-type(odd) { background: var(--cm-table-stripe) !important; }
+.table td, .table th { border-color: var(--cm-table-border) !important; }
+.thead-light th { background: var(--cm-table-head-bg) !important; border-color: var(--cm-table-border) !important; color: var(--cm-text-primary) !important; }
+
+.quiz-card { border-color: var(--cm-card-border) !important; }
+.quiz-card .quiz-title { color: var(--cm-text-primary) !important; }
+.quiz-card .quiz-meta { color: var(--cm-text-secondary) !important; }
+.quiz-card .quiz-meta i { color: var(--cm-text-muted) !important; }
+.quiz-card .quiz-divider { border-color: var(--cm-quiz-divider) !important; }
+.quiz-icon-box { background: var(--cm-quiz-icon-bg) !important; }
+.quiz-badge-time { background: var(--cm-badge-time-bg) !important; border-color: var(--cm-badge-time-border) !important; color: var(--cm-badge-time-color) !important; }
+.quiz-badge-due { background: var(--cm-badge-due-bg) !important; border-color: var(--cm-badge-due-border) !important; color: var(--cm-badge-due-color) !important; }
+.btn-quiz-edit { background: var(--cm-btn-edit-bg) !important; border-color: var(--cm-btn-edit-border) !important; color: var(--cm-btn-edit-color) !important; }
+.btn-quiz-results { background: var(--cm-btn-results-bg) !important; border-color: var(--cm-btn-results-border) !important; color: var(--cm-btn-results-color) !important; }
+
+.modal-content { background: var(--cm-modal-bg) !important; border-color: var(--cm-modal-border) !important; transition: background 0.4s ease; }
+.modal-header { border-color: var(--cm-hr) !important; }
+.modal-footer { border-color: var(--cm-hr) !important; }
+.modal-title, .close { color: var(--cm-text-primary) !important; }
+
+.alert-success { background: var(--cm-alert-success-bg) !important; border-color: var(--cm-alert-success-border) !important; color: var(--cm-text-primary) !important; }
+.alert-danger { background: var(--cm-alert-danger-bg) !important; border-color: var(--cm-alert-danger-border) !important; color: var(--cm-text-primary) !important; }
+
+.breadcrumb { background: transparent !important; }
+.breadcrumb-item a, .breadcrumb-item.active { color: var(--cm-breadcrumb-color) !important; }
+.breadcrumb-item a:hover { color: var(--cm-link-color) !important; }
+
+hr { border-color: var(--cm-hr) !important; }
+
+.card.login-form { background: var(--cm-card-bg) !important; border-color: var(--cm-card-border) !important; box-shadow: var(--cm-card-shadow) !important; }
+.card.login-form h3, .card.login-form .register-heading, .card.login-form a h3 { color: var(--cm-text-primary) !important; }
+.card.login-form .login-form__footer { color: var(--cm-footer-color) !important; }
+.card.login-form .form-control { background: var(--cm-input-bg) !important; border-bottom: 1px solid var(--cm-input-border) !important; color: var(--cm-text-primary) !important; }
+.card.login-form .form-control::placeholder { color: var(--cm-input-placeholder) !important; }
+.card.login-form .form-control:focus { background: var(--cm-input-focus-bg) !important; border-bottom-color: var(--cm-input-focus-border) !important; }
+
+.class-card { background: var(--cm-card-bg) !important; border-color: var(--cm-card-border) !important; }
+.card-footer { background: transparent !important; border-color: var(--cm-hr) !important; }
+
+/* ===================================================================
+   LIGHT MODE — COMPREHENSIVE OVERRIDES
+   These use body.light-mode prefix for maximum specificity to beat
+   any inline !important styles in the HTML files
+   =================================================================== */
+
+/* ── BACKGROUND ── */
+body.light-mode {
+    background-color: #e8eef8 !important;
+}
+
+body.light-mode::before {
+    background:
+            radial-gradient(ellipse 80% 70% at 50% 40%, rgba(100,160,255,0.08) 0%, rgba(150,200,255,0.04) 40%, transparent 70%),
+            linear-gradient(160deg, #d8e6f6 0%, #e2edf8 35%, #eaf3fc 60%, #ddeaf6 100%) !important;
+    animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+}
+
+body.light-mode::after {
+    background:
+            radial-gradient(ellipse 60% 35% at 20% 80%, rgba(100,160,255,0.05) 0%, transparent 70%),
+            radial-gradient(ellipse 40% 30% at 80% 20%, rgba(80,140,255,0.04) 0%, transparent 70%) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+body.light-mode #main-wrapper,
+body.light-mode .content-body,
+body.light-mode .login-form-bg {
+    background: transparent !important;
+    background-image: none !important;
+}
+
+/* ── HEADER & NAV ── */
+body.light-mode .header,
+body.light-mode .nav-header {
+    background: rgba(255,255,255,0.95) !important;
+    border-bottom: 1px solid rgba(100,150,230,0.2) !important;
+    box-shadow: 0 2px 12px rgba(80,120,200,0.1) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+}
+
+body.light-mode .header-content h1,
+body.light-mode .nav-header .brand-title,
+body.light-mode .brand-logo h3,
+body.light-mode .header a,
+body.light-mode .header span,
+body.light-mode .nav-header span,
+body.light-mode .header-right a,
+body.light-mode .header-right span,
+body.light-mode .hamburger .line {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+    background-color: #1a2a4a;
+}
+
+/* Hamburger lines */
+body.light-mode .hamburger .line {
+    background-color: #1a2a4a !important;
+}
+
+/* ── ALL TEXT DARK ── */
+body.light-mode h1, body.light-mode h2,
+body.light-mode h3, body.light-mode h4,
+body.light-mode h5, body.light-mode h6,
+body.light-mode p, body.light-mode label,
+body.light-mode span:not(.badge):not(.dot-red):not(.dot-yellow):not(.dot-green),
+body.light-mode li, body.light-mode strong,
+body.light-mode small, body.light-mode .card-title,
+body.light-mode .card-body, body.light-mode .card-body h5,
+body.light-mode .card-body p, body.light-mode .card-body strong,
+body.light-mode .card-body small, body.light-mode th,
+body.light-mode td, body.light-mode .breadcrumb-item,
+body.light-mode .breadcrumb-item a, body.light-mode .breadcrumb-item.active {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+}
+
+body.light-mode .text-muted, body.light-mode small.text-muted,
+body.light-mode .form-text {
+    color: #4a6090 !important;
+}
+
+body.light-mode .text-success { color: #1a6e30 !important; }
+body.light-mode .text-info    { color: #005a78 !important; }
+body.light-mode .text-warning { color: #7a4800 !important; }
+body.light-mode .text-danger  { color: #b01010 !important; }
+body.light-mode .text-primary { color: #2a50c8 !important; }
+
+/* ── CARDS ── */
+body.light-mode .card,
+body.light-mode .class-card,
+body.light-mode .quiz-card,
+body.light-mode .answer-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(242,249,255,0.96) 100%) !important;
+    border: 1px solid rgba(100,150,230,0.18) !important;
+    box-shadow: 0 4px 20px rgba(80,120,200,0.09), 0 1px 4px rgba(80,120,200,0.06) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    color: #1a2a4a !important;
+}
+
+body.light-mode .card:hover,
+body.light-mode .class-card:hover,
+body.light-mode .quiz-card:hover {
+    box-shadow: 0 12px 32px rgba(80,130,220,0.15), 0 2px 8px rgba(80,120,200,0.08) !important;
+    border-color: rgba(100,160,255,0.3) !important;
+    transform: translateY(-5px) !important;
+}
+
+body.light-mode .card-footer {
+    background: rgba(240,247,255,0.7) !important;
+    border-top: 1px solid rgba(100,150,220,0.15) !important;
+}
+
+body.light-mode .card-body {
+    color: #1a2a4a !important;
+}
+
+/* ── INPUTS ── */
+body.light-mode .form-control,
+body.light-mode textarea.form-control,
+body.light-mode input.form-control,
+body.light-mode select.form-control {
+    background: rgba(255,255,255,0.96) !important;
+    border: 1px solid rgba(100,150,220,0.35) !important;
+    color: #1a2a4a !important;
+    box-shadow: inset 0 1px 3px rgba(80,120,200,0.05) !important;
+}
+body.light-mode .form-control:focus,
+body.light-mode textarea.form-control:focus {
+    background: #ffffff !important;
+    border-color: rgba(80,130,255,0.65) !important;
+    box-shadow: 0 0 0 3px rgba(80,130,255,0.1), inset 0 1px 3px rgba(80,120,200,0.03) !important;
+    color: #1a2a4a !important;
+}
+body.light-mode .form-control::placeholder {
+    color: #8a9ec0 !important;
+}
+
+/* ── TABLES ── */
+body.light-mode .table {
+    background: rgba(255,255,255,0.6) !important;
+    color: #1a2a4a !important;
+}
+body.light-mode .table thead {
+    background: rgba(80,130,220,0.09) !important;
+}
+body.light-mode .table thead th,
+body.light-mode .table tbody td,
+body.light-mode .table td,
+body.light-mode .table th {
+    color: #1a2a4a !important;
+    border-color: rgba(100,150,220,0.14) !important;
+    text-shadow: none !important;
+}
+body.light-mode .table tbody tr {
+    background: rgba(255,255,255,0.4) !important;
+}
+body.light-mode .table tbody tr:hover {
+    background: rgba(80,130,255,0.06) !important;
+    transform: none !important;
+}
+body.light-mode .table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(80,130,255,0.03) !important;
+}
+body.light-mode .table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* ── MODALS ── */
+body.light-mode .modal-content {
+    background: rgba(248,252,255,0.99) !important;
+    border-color: rgba(100,150,230,0.22) !important;
+    box-shadow: 0 16px 48px rgba(80,120,200,0.18) !important;
+}
+body.light-mode .modal-header {
+    background: rgba(240,247,255,0.96) !important;
+    border-bottom-color: rgba(100,150,230,0.18) !important;
+}
+body.light-mode .modal-footer {
+    background: rgba(240,247,255,0.8) !important;
+    border-top-color: rgba(100,150,230,0.18) !important;
+}
+body.light-mode .modal-title, body.light-mode .close {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+}
+
+/* ── ALERTS ── */
+body.light-mode .alert-success {
+    background: rgba(40,167,69,0.07) !important;
+    color: #155724 !important;
+    border-left-color: #28a745 !important;
+    border-color: rgba(40,167,69,0.25) !important;
+}
+body.light-mode .alert-danger {
+    background: rgba(200,50,50,0.07) !important;
+    color: #721c24 !important;
+    border-left-color: #dc3545 !important;
+    border-color: rgba(200,50,50,0.25) !important;
+}
+body.light-mode .alert-info {
+    background: rgba(0,150,200,0.07) !important;
+    color: #0c5460 !important;
+    border-color: rgba(0,150,200,0.25) !important;
+}
+
+/* ── BREADCRUMBS ── */
+body.light-mode .breadcrumb-item a,
+body.light-mode .breadcrumb-item.active,
+body.light-mode .breadcrumb-item {
+    color: #2a4070 !important;
+    text-shadow: none !important;
+}
+
+/* ── BUTTONS ── */
+body.light-mode .btn-success {
+    background: linear-gradient(135deg, #3cb560 0%, #268a40 100%) !important;
+    box-shadow: 0 4px 15px rgba(50,160,80,0.28) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+body.light-mode .btn-primary {
+    background: linear-gradient(135deg, #4a6edf 0%, #2a50bf 100%) !important;
+    box-shadow: 0 4px 15px rgba(50,100,220,0.22) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+body.light-mode .btn-info {
+    background: linear-gradient(135deg, #0099bb 0%, #007090 100%) !important;
+    box-shadow: 0 4px 15px rgba(0,160,200,0.22) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+body.light-mode .btn-danger {
+    background: linear-gradient(135deg, #e53535 0%, #b52020 100%) !important;
+    box-shadow: 0 4px 15px rgba(220,50,50,0.22) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+body.light-mode .btn-secondary {
+    background: linear-gradient(135deg, #5a7090 0%, #3a5070 100%) !important;
+    box-shadow: 0 4px 15px rgba(80,100,130,0.18) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+body.light-mode .btn-outline-danger {
+    color: #c02020 !important;
+    border-color: rgba(200,60,60,0.5) !important;
+}
+body.light-mode .btn-outline-danger:hover {
+    background: rgba(200,60,60,0.08) !important;
+}
+
+/* ── BADGES ── */
+body.light-mode .badge-warning  { color: #5a2e00 !important; }
+body.light-mode .badge-danger   { color: #fff !important; }
+body.light-mode .badge-success  { color: #fff !important; }
+body.light-mode .badge-primary  { color: #fff !important; }
+body.light-mode .badge-info     { color: #fff !important; }
+
+/* ── CLASS CODE ── */
+body.light-mode .class-code { color: #2a50c8 !important; text-shadow: none !important; }
+
+/* ── AUTH CARD ── */
+body.light-mode .card.login-form {
+    background: rgba(255,255,255,0.97) !important;
+    border-color: rgba(100,150,230,0.22) !important;
+    box-shadow: 0 8px 32px rgba(80,120,200,0.13), 0 2px 8px rgba(80,120,200,0.08) !important;
+}
+body.light-mode .card.login-form h3,
+body.light-mode .card.login-form .register-heading,
+body.light-mode .card.login-form a h3,
+body.light-mode .card.login-form a { color: #1a2a4a !important; text-shadow: none !important; }
+body.light-mode .card.login-form .login-form__footer { color: #3a5a8a !important; }
+body.light-mode .card.login-form .form-control {
+    background: rgba(255,255,255,0.92) !important;
+    border-bottom: 1px solid rgba(100,150,220,0.38) !important;
+    color: #1a2a4a !important;
+}
+body.light-mode .card.login-form .login-form__btn {
+    background: linear-gradient(135deg, #4a6edf 0%, #2a50bf 100%) !important;
+    box-shadow: 0 8px 20px rgba(50,100,220,0.28) !important;
+    color: #ffffff !important;
+}
+
+/* ── CUSTOM FILE INPUT ── */
+body.light-mode .custom-file-label {
+    background: rgba(255,255,255,0.95) !important;
+    color: #1a2a4a !important;
+    border-color: rgba(100,150,230,0.38) !important;
+}
+body.light-mode .custom-file-label::after {
+    background: rgba(80,120,220,0.1) !important;
+    color: #1a40b0 !important;
+    border-left-color: rgba(100,150,230,0.38) !important;
+}
+
+/* ── SIDEBAR / DEZNAV ── */
+body.light-mode .deznav,
+body.light-mode .sidebar {
+    background: rgba(255,255,255,0.97) !important;
+    border-right: 1px solid rgba(100,150,230,0.18) !important;
+    box-shadow: 2px 0 12px rgba(80,120,200,0.07) !important;
+}
+body.light-mode .deznav .metismenu > li > a,
+body.light-mode .deznav .metismenu a,
+body.light-mode .sidebar a, body.light-mode .sidebar li { color: #1a2a4a !important; }
+body.light-mode .deznav .metismenu > li.mm-active > a,
+body.light-mode .deznav .metismenu > li:hover > a {
+    color: #2a50c8 !important;
+    background: rgba(80,130,255,0.07) !important;
+}
+
+/* ── CODE BLOCKS ── */
+body.light-mode .essay-answer,
+body.light-mode .code-display,
+body.light-mode .code-editor {
+    background: rgba(242,247,255,0.97) !important;
+    color: #1a2a4a !important;
+    border-color: rgba(100,150,220,0.22) !important;
+}
+body.light-mode .grading-section {
+    background: rgba(255,200,50,0.06) !important;
+    border-color: rgba(200,160,0,0.22) !important;
+}
+body.light-mode .code-editor-header,
+body.light-mode .code-footer,
+body.light-mode .code-editor-wrapper {
+    background: rgba(225,235,252,0.97) !important;
+}
+body.light-mode .line-numbers {
+    background: rgba(212,226,248,0.97) !important;
+    color: #5070a0 !important;
+    border-right-color: rgba(100,150,220,0.22) !important;
+}
+body.light-mode .editor-title { color: #4a6090 !important; }
+
+/* ── GRID OVERLAY ── */
+body.light-mode .grid-overlay {
+    background-image:
+            linear-gradient(rgba(80,120,220,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(80,120,220,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+}
+
+/* ── MISC ── */
+body.light-mode hr { border-color: rgba(100,150,220,0.16) !important; }
+
+/* ── THEME TOGGLE BUTTON ── */
+#cm-theme-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+body:not(.light-mode) #cm-theme-toggle {
+    background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%);
+    color: #1a1a00;
+    box-shadow: 0 4px 16px rgba(255,200,0,0.35);
+}
+body:not(.light-mode) #cm-theme-toggle:hover {
+    transform: scale(1.12) rotate(15deg);
+    box-shadow: 0 6px 24px rgba(255,200,0,0.5);
+}
+body.light-mode #cm-theme-toggle {
+    background: linear-gradient(135deg, #1a3a7a 0%, #0d2255 100%);
+    color: #c8e0ff;
+    box-shadow: 0 4px 16px rgba(20,60,180,0.35);
+}
+body.light-mode #cm-theme-toggle:hover {
+    transform: scale(1.12) rotate(-15deg);
+    box-shadow: 0 6px 24px rgba(20,60,180,0.5);
+}

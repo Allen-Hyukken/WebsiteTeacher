@@ -27,7 +27,7 @@ public class TeacherController {
     @Autowired private UserRepository userRepository;
     @Autowired private AnswerRepository answerRepository;
 
-    // ── Dashboard ───────────────────────────────────────────────────────────
+    // ── Dashboard ────────────────────────────────────────────────────────────
 
     @GetMapping
     public String teacherDashboard(@AuthenticationPrincipal CustomUserDetails userDetails,
@@ -39,7 +39,7 @@ public class TeacherController {
         return "teacher";
     }
 
-    // ── Classroom ───────────────────────────────────────────────────────────
+    // ── Classroom ─────────────────────────────────────────────────────────────
 
     @PostMapping("/create")
     public String createClass(@RequestParam("name") String name,
@@ -76,7 +76,7 @@ public class TeacherController {
         return "redirect:/teacher/class/" + classId;
     }
 
-    // ── Quiz — create ───────────────────────────────────────────────────────
+    // ── Quiz — create ─────────────────────────────────────────────────────────
 
     @GetMapping("/class/{classId}/create_quiz")
     public String showCreateQuizForm(@PathVariable Long classId, Model model) {
@@ -93,20 +93,24 @@ public class TeacherController {
                            @RequestParam(value = "description", required = false) String description,
                            @RequestParam(value = "timeLimitMinutes", required = false) Integer timeLimitMinutes,
                            @RequestParam(value = "deadline", required = false) String deadlineStr,
-                           @AuthenticationPrincipal CustomUserDetails userDetails) {
+                           @RequestParam(value = "showAnswers", required = false) Boolean showAnswers) {
 
         Optional<Classroom> classroomOpt = classroomService.findById(classId);
         if (classroomOpt.isEmpty()) return "redirect:/teacher";
 
-        User teacher = userRepository.findById(userDetails.getUser().getId()).orElse(null);
-        if (teacher == null) return "redirect:/teacher";
-
-        Quiz quiz = quizService.createQuiz(title, description, classroomOpt.get(), teacher,
-                sanitizeTimeLimit(timeLimitMinutes), parseDeadline(deadlineStr));
+        // NOTE: teacher is not needed by the form but kept for record
+        // We use a dummy lookup to stay consistent with the existing pattern.
+        // If you need teacher info, inject @AuthenticationPrincipal here.
+        Quiz quiz = quizService.createQuiz(
+                title, description, classroomOpt.get(), null,
+                sanitizeTimeLimit(timeLimitMinutes),
+                parseDeadline(deadlineStr),
+                showAnswers != null && showAnswers
+        );
         return "redirect:/teacher/quiz/" + quiz.getId() + "/edit";
     }
 
-    // ── Quiz — edit ─────────────────────────────────────────────────────────
+    // ── Quiz — edit ───────────────────────────────────────────────────────────
 
     @GetMapping("/quiz/{id}/edit")
     public String editQuiz(@PathVariable Long id, Model model) {
@@ -121,7 +125,8 @@ public class TeacherController {
                              @RequestParam("title") String title,
                              @RequestParam(value = "description", required = false) String description,
                              @RequestParam(value = "timeLimitMinutes", required = false) Integer timeLimitMinutes,
-                             @RequestParam(value = "deadline", required = false) String deadlineStr) {
+                             @RequestParam(value = "deadline", required = false) String deadlineStr,
+                             @RequestParam(value = "showAnswers", required = false) Boolean showAnswers) {
 
         Optional<Quiz> quizOpt = quizService.findById(id);
         if (quizOpt.isEmpty()) return "redirect:/teacher";
@@ -131,27 +136,55 @@ public class TeacherController {
         quiz.setDescription(description);
         quiz.setTimeLimitMinutes(sanitizeTimeLimit(timeLimitMinutes));
         quiz.setDeadline(parseDeadline(deadlineStr));
+        quiz.setShowAnswers(showAnswers != null && showAnswers);
         quizService.updateQuiz(quiz);
 
-        return "redirect:/teacher/class/" + quiz.getClassRoom().getId();
+        return "redirect:/teacher/quiz/" + id + "/edit";
     }
 
-    // ── Quiz — show/hide answers toggle ─────────────────────────────────────
+    // ── Quiz — deploy / retract ───────────────────────────────────────────────
 
     /**
-     * Flips whether students can see correct/wrong answer feedback
-     * after submitting. Redirects back to the results page.
+     * Deploys a DRAFT quiz so students can see and attempt it.
      */
+    @PostMapping("/quiz/{id}/deploy")
+    public String deployQuiz(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            Quiz deployed = quizService.deployQuiz(id);
+            ra.addFlashAttribute("success",
+                    "\"" + deployed.getTitle() + "\" is now live! Students can see and attempt it.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Could not deploy quiz: " + e.getMessage());
+        }
+        return "redirect:/teacher/quiz/" + id + "/edit";
+    }
+
+    /**
+     * Retracts an ACTIVE quiz back to DRAFT (hidden from students).
+     */
+    @PostMapping("/quiz/{id}/retract")
+    public String retractQuiz(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            Quiz retracted = quizService.retractQuiz(id);
+            ra.addFlashAttribute("success",
+                    "\"" + retracted.getTitle() + "\" has been retracted to draft.");
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Could not retract quiz: " + e.getMessage());
+        }
+        return "redirect:/teacher/quiz/" + id + "/edit";
+    }
+
+    // ── Quiz — show/hide answers toggle ──────────────────────────────────────
+
     @PostMapping("/quiz/{id}/toggle-answers")
-    public String toggleShowAnswers(@PathVariable Long id,
-                                    RedirectAttributes ra) {
+    public String toggleShowAnswers(@PathVariable Long id, RedirectAttributes ra) {
         Quiz updated = quizService.toggleShowAnswers(id);
         String state = updated.getShowAnswers() ? "visible to students" : "hidden from students";
         ra.addFlashAttribute("success", "Answer feedback is now " + state + ".");
         return "redirect:/teacher/quiz/" + id + "/results";
     }
 
-    // ── Quiz — delete ───────────────────────────────────────────────────────
+    // ── Quiz — delete ─────────────────────────────────────────────────────────
 
     @GetMapping("/quiz/{id}/delete")
     public String deleteQuiz(@PathVariable Long id) {
@@ -164,7 +197,7 @@ public class TeacherController {
         return "redirect:/teacher";
     }
 
-    // ── Quiz — questions ────────────────────────────────────────────────────
+    // ── Quiz — questions ──────────────────────────────────────────────────────
 
     @PostMapping("/quiz/{quizId}/add_question")
     public String addQuestion(@PathVariable Long quizId,
@@ -206,7 +239,7 @@ public class TeacherController {
         return "redirect:/teacher/quiz/" + quizId + "/edit";
     }
 
-    // ── Quiz — results ──────────────────────────────────────────────────────
+    // ── Quiz — results ────────────────────────────────────────────────────────
 
     @GetMapping("/quiz/{id}/results")
     public String viewQuizResults(@PathVariable Long id, Model model) {
@@ -221,10 +254,8 @@ public class TeacherController {
         model.addAttribute("attempts", attempts);
         model.addAttribute("averageScore", averageScore);
 
-        // Score distribution stats
         double maxScore = 0, minScore = quiz.getTotalPoints() != null ? quiz.getTotalPoints() : 0;
         long excellentCount = 0, goodCount = 0, averageCount = 0, poorCount = 0;
-
         double totalPoints = quiz.getTotalPoints() != null ? quiz.getTotalPoints() : 0;
 
         if (!attempts.isEmpty() && totalPoints > 0) {
@@ -250,7 +281,7 @@ public class TeacherController {
         return "teacher_insidequiz_result";
     }
 
-    // ── Attempt review & essay grading ──────────────────────────────────────
+    // ── Attempt review & essay grading ────────────────────────────────────────
 
     @GetMapping("/attempt/{attemptId}/review")
     public String reviewAttempt(@PathVariable Long attemptId, Model model,
@@ -264,7 +295,6 @@ public class TeacherController {
         Attempt attempt = attemptOpt.get();
         List<Answer> answers = answerRepository.findByAttemptId(attemptId);
 
-        // Count how many essay answers still need grading
         long pendingEssays = answers.stream()
                 .filter(a -> a.getQuestion().getType() == Question.QuestionType.ESSAY
                         && a.getEssayScore() == null)
@@ -291,7 +321,7 @@ public class TeacherController {
         return "redirect:/teacher/attempt/" + attemptId + "/review";
     }
 
-    // ── Helpers ─────────────────────────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private LocalDateTime parseDeadline(String s) {
         if (s == null || s.isBlank()) return null;

@@ -9,6 +9,15 @@ import java.util.List;
 @Table(name = "quiz")
 public class Quiz {
 
+    // ── Status enum ─────────────────────────────────────────────────────────
+
+    public enum QuizStatus {
+        DRAFT,   // Not yet deployed; invisible to students
+        ACTIVE   // Deployed; students can see and attempt it
+    }
+
+    // ── Fields ──────────────────────────────────────────────────────────────
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,8 +28,14 @@ public class Quiz {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    /** Legacy visibility flag. True when status == ACTIVE. */
     @Column(nullable = false)
-    private Boolean published = true;
+    private Boolean published = false;
+
+    /** Draft-vs-deployed state. */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private QuizStatus status = QuizStatus.DRAFT;
 
     @ManyToOne
     @JoinColumn(name = "class_room_id")
@@ -57,7 +72,13 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
     private List<Attempt> attempts = new ArrayList<>();
 
-    // ── Getters & Setters ───────────────────────────────────────────────────
+    // ── Convenience helpers ──────────────────────────────────────────────────
+
+    /** Returns true when this quiz has been deployed and students can see it. */
+    public boolean isDraft()  { return status == QuizStatus.DRAFT; }
+    public boolean isActive() { return status == QuizStatus.ACTIVE; }
+
+    // ── Getters & Setters ────────────────────────────────────────────────────
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -70,6 +91,9 @@ public class Quiz {
 
     public Boolean getPublished() { return published; }
     public void setPublished(Boolean published) { this.published = published; }
+
+    public QuizStatus getStatus() { return status; }
+    public void setStatus(QuizStatus status) { this.status = status; }
 
     public Classroom getClassRoom() { return classRoom; }
     public void setClassRoom(Classroom classRoom) { this.classRoom = classRoom; }

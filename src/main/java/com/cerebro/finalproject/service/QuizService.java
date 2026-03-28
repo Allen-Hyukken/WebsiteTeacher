@@ -20,17 +20,28 @@ public class QuizService {
     @Autowired private AttemptRepository attemptRepository;
     @Autowired private AnswerRepository answerRepository;
 
-    // ── Quiz CRUD ───────────────────────────────────────────────────────────
+    // ── Quiz CRUD ────────────────────────────────────────────────────────────
 
     /** Legacy overload – keeps existing call sites working. */
     public Quiz createQuiz(String title, String description,
                            Classroom classroom, User teacher) {
-        return createQuiz(title, description, classroom, teacher, null, null);
+        return createQuiz(title, description, classroom, teacher, null, null, false);
     }
 
     public Quiz createQuiz(String title, String description,
                            Classroom classroom, User teacher,
                            Integer timeLimitMinutes, LocalDateTime deadline) {
+        return createQuiz(title, description, classroom, teacher, timeLimitMinutes, deadline, false);
+    }
+
+    /**
+     * Creates a new quiz in DRAFT status (invisible to students).
+     * Teacher must explicitly deploy it to make it accessible.
+     */
+    public Quiz createQuiz(String title, String description,
+                           Classroom classroom, User teacher,
+                           Integer timeLimitMinutes, LocalDateTime deadline,
+                           Boolean showAnswers) {
         Quiz quiz = new Quiz();
         quiz.setTitle(title);
         quiz.setDescription(description);
@@ -40,7 +51,10 @@ public class QuizService {
         quiz.setTotalPoints(0.0);
         quiz.setTimeLimitMinutes(timeLimitMinutes);
         quiz.setDeadline(deadline);
-        quiz.setShowAnswers(false);
+        quiz.setShowAnswers(showAnswers != null && showAnswers);
+        // New quizzes always start as DRAFT
+        quiz.setStatus(Quiz.QuizStatus.DRAFT);
+        quiz.setPublished(false);
         return quizRepository.save(quiz);
     }
 
@@ -61,6 +75,31 @@ public class QuizService {
         quizRepository.deleteById(id);
     }
 
+    /**
+     * Deploys a DRAFT quiz so that students can see and attempt it.
+     * Sets status = ACTIVE and published = true.
+     */
+    @Transactional
+    public Quiz deployQuiz(Long quizId) {
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found: " + quizId));
+        quiz.setStatus(Quiz.QuizStatus.ACTIVE);
+        quiz.setPublished(true);
+        return quizRepository.save(quiz);
+    }
+
+    /**
+     * Retracts a deployed quiz back to DRAFT (hides it from students).
+     */
+    @Transactional
+    public Quiz retractQuiz(Long quizId) {
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(() -> new RuntimeException("Quiz not found: " + quizId));
+        quiz.setStatus(Quiz.QuizStatus.DRAFT);
+        quiz.setPublished(false);
+        return quizRepository.save(quiz);
+    }
+
     /** Flips the showAnswers flag and returns the updated quiz. */
     @Transactional
     public Quiz toggleShowAnswers(Long quizId) {
@@ -70,7 +109,7 @@ public class QuizService {
         return quizRepository.save(quiz);
     }
 
-    // ── Questions ───────────────────────────────────────────────────────────
+    // ── Questions ────────────────────────────────────────────────────────────
 
     @Transactional
     public Question addQuestion(Quiz quiz, Question.QuestionType type,
@@ -141,7 +180,7 @@ public class QuizService {
         quizRepository.updateTotalPoints(quizId);
     }
 
-    // ── Attempts & Submission ───────────────────────────────────────────────
+    // ── Attempts & Submission ─────────────────────────────────────────────────
 
     @Transactional
     public Attempt submitQuiz(Quiz quiz, User student,
@@ -241,12 +280,8 @@ public class QuizService {
         return attemptRepository.findById(attemptId);
     }
 
-    // ── Essay Grading ───────────────────────────────────────────────────────
+    // ── Essay Grading ─────────────────────────────────────────────────────────
 
-    /**
-     * Awards a manual score to an essay answer and recalculates the
-     * attempt's total score immediately.
-     */
     @Transactional
     public void gradeEssayAnswer(Long answerId, Double score) {
         Answer answer = answerRepository.findById(answerId)
@@ -264,11 +299,9 @@ public class QuizService {
 
         answer.applyEssayGrade(score);
         answerRepository.save(answer);
-
         recalculateAttemptScore(answer.getAttempt().getId());
     }
 
-    /** Recomputes and saves the total score for an attempt. */
     @Transactional
     public void recalculateAttemptScore(Long attemptId) {
         Attempt attempt = attemptRepository.findById(attemptId).orElse(null);
@@ -292,7 +325,7 @@ public class QuizService {
         attemptRepository.save(attempt);
     }
 
-    // ── Private helpers ─────────────────────────────────────────────────────
+    // ── Private helpers ───────────────────────────────────────────────────────
 
     private String normalize(String s) {
         if (s == null) return "";

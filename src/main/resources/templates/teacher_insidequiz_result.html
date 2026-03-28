@@ -256,25 +256,25 @@
                     <div class="row text-center">
                         <div class="col-6 col-md-3 mb-2">
                             <div class="p-3 border rounded">
-                                <div class="h4 mb-0" th:text="${quiz.questions != null ? #lists.size(quiz.questions) : 0}">0</div>
+                                <div class="text-white h4 mb-0" th:text="${quiz.questions != null ? #lists.size(quiz.questions) : 0}">0</div>
                                 <small class="text-muted">Questions</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
                             <div class="p-3 border rounded">
-                                <div class="h4 mb-0" th:text="${quiz.totalPoints != null ? quiz.totalPoints : 0}">0</div>
+                                <div class="text-white h4 mb-0" th:text="${quiz.totalPoints != null ? quiz.totalPoints : 0}">0</div>
                                 <small class="text-muted">Total Points</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
                             <div class="p-3 border rounded">
-                                <div class="h4 mb-0" th:text="${attempts != null ? #lists.size(attempts) : 0}">0</div>
+                                <div class="text-white h4 mb-0" th:text="${attempts != null ? #lists.size(attempts) : 0}">0</div>
                                 <small class="text-muted">Attempts</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-3 mb-2">
                             <div class="p-3 border rounded">
-                                <div class="h4 mb-0"
+                                <div class="text-white h4 mb-0"
                                      th:text="${averageScore != null ? #numbers.formatDecimal(averageScore, 1, 1) + '%' : '—'}">—</div>
                                 <small class="text-muted">Class Average</small>
                             </div>

@@ -241,7 +241,7 @@
             <div th:if="${quiz.status.name() == 'DRAFT'}" class="status-banner-draft mb-4">
                 <div>
                     <span class="status-badge-draft"><i class="fa fa-pencil"></i> DRAFT</span>
-                    <p class="mb-0 mt-2" style="color:#ffd875; font-size:0.88rem;">
+                    <p class="mb-0 mt-2 status-banner-text" style="color:#ffd875; font-size:0.88rem;">
                         This quiz is not visible to students yet. Finish adding questions, then deploy it.
                     </p>
                 </div>
@@ -256,7 +256,7 @@
             <div th:if="${quiz.status.name() == 'ACTIVE'}" class="status-banner-active mb-4">
                 <div>
                     <span class="status-badge-active"><i class="fa fa-check-circle"></i> ACTIVE</span>
-                    <p class="mb-0 mt-2" style="color:#5ef0a0; font-size:0.88rem;">
+                    <p class="mb-0 mt-2 status-banner-text" style="color:#5ef0a0; font-size:0.88rem;">
                         This quiz is live — students can see and attempt it.
                     </p>
                 </div>
@@ -432,7 +432,7 @@
             <div class="text-center mt-2 mb-5">
                 <a th:href="@{|/teacher/class/${quiz.classRoom.id}|}"
                    class="btn btn-secondary mr-2"
-                   style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);">
+                >
                     <i class="fa fa-arrow-left"></i> Back to Class
                 </a>
                 <a th:if="${quiz.status.name() == 'ACTIVE'}"

@@ -478,6 +478,109 @@ body.light-mode .btn-outline-danger:hover {
     background: rgba(200,60,60,0.08) !important;
 }
 
+/* ── QUIZ ACTION BUTTONS (light mode) ── */
+body.light-mode .btn-quiz-edit,
+body.light-mode .quiz-card .btn-quiz-edit {
+    background: linear-gradient(135deg, rgba(60,100,220,0.12) 0%, rgba(40,80,200,0.1) 100%) !important;
+    border: 1px solid rgba(60,100,220,0.35) !important;
+    color: #2a50bf !important;
+    font-weight: 600 !important;
+}
+body.light-mode .btn-quiz-edit:hover,
+body.light-mode .quiz-card .btn-quiz-edit:hover {
+    background: linear-gradient(135deg, rgba(60,100,220,0.22) 0%, rgba(40,80,200,0.18) 100%) !important;
+    border-color: rgba(60,100,220,0.55) !important;
+    color: #1a3aaa !important;
+}
+body.light-mode .btn-quiz-results,
+body.light-mode .quiz-card .btn-quiz-results {
+    background: linear-gradient(135deg, rgba(0,140,160,0.12) 0%, rgba(0,110,130,0.1) 100%) !important;
+    border: 1px solid rgba(0,150,180,0.35) !important;
+    color: #006880 !important;
+    font-weight: 600 !important;
+}
+body.light-mode .btn-quiz-results:hover,
+body.light-mode .quiz-card .btn-quiz-results:hover {
+    background: linear-gradient(135deg, rgba(0,150,180,0.22) 0%, rgba(0,120,145,0.18) 100%) !important;
+    border-color: rgba(0,160,190,0.5) !important;
+    color: #004d60 !important;
+}
+body.light-mode .btn-quiz-delete,
+body.light-mode .quiz-card .btn-quiz-delete {
+    background: linear-gradient(135deg, rgba(200,40,40,0.1) 0%, rgba(170,25,25,0.08) 100%) !important;
+    border: 1px solid rgba(200,50,50,0.3) !important;
+    color: #b01010 !important;
+    font-weight: 600 !important;
+}
+body.light-mode .btn-quiz-delete:hover,
+body.light-mode .quiz-card .btn-quiz-delete:hover {
+    background: linear-gradient(135deg, rgba(220,50,50,0.18) 0%, rgba(190,30,30,0.15) 100%) !important;
+    border-color: rgba(200,50,50,0.5) !important;
+    color: #800808 !important;
+}
+
+/* ── DRAFT / ACTIVE BANNERS (light mode) ── */
+body.light-mode .draft-info-banner {
+    background: rgba(180, 100, 0, 0.07) !important;
+    border-color: rgba(180, 100, 0, 0.3) !important;
+    color: #7a4400 !important;
+}
+body.light-mode .draft-info-banner strong {
+    color: #5a2e00 !important;
+}
+body.light-mode .status-banner-draft {
+    background: rgba(180, 100, 0, 0.07) !important;
+    border-color: rgba(180, 100, 0, 0.3) !important;
+}
+body.light-mode .status-banner-draft p,
+body.light-mode .status-banner-draft [style*="color:#ffd875"],
+body.light-mode .status-banner-draft [style*="color: #ffd875"],
+body.light-mode .status-banner-draft .status-banner-text {
+    color: #7a4400 !important;
+}
+body.light-mode .status-badge-draft {
+    background: rgba(180, 100, 0, 0.12) !important;
+    border-color: rgba(180, 100, 0, 0.35) !important;
+    color: #6a3600 !important;
+}
+body.light-mode .status-banner-active {
+    background: rgba(20, 140, 60, 0.07) !important;
+    border-color: rgba(20, 140, 60, 0.3) !important;
+}
+body.light-mode .status-banner-active p,
+body.light-mode .status-banner-active .status-banner-text {
+    color: #1a5e30 !important;
+}
+body.light-mode .status-badge-active {
+    background: rgba(20, 140, 60, 0.12) !important;
+    border-color: rgba(20, 140, 60, 0.35) !important;
+    color: #0f4020 !important;
+}
+
+/* ── DEPLOY / RETRACT BUTTONS (light mode) ── */
+body.light-mode .btn-deploy {
+    background: linear-gradient(135deg, #2a9a50, #1e7a3c) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(30,140,70,0.28) !important;
+    border: none !important;
+}
+body.light-mode .btn-deploy:hover {
+    background: linear-gradient(135deg, #239046, #186e34) !important;
+    box-shadow: 0 6px 20px rgba(30,140,70,0.4) !important;
+    color: #ffffff !important;
+}
+body.light-mode .btn-retract {
+    background: rgba(180, 100, 0, 0.1) !important;
+    border: 1.5px solid rgba(180, 100, 0, 0.55) !important;
+    color: #8a4a00 !important;
+    font-weight: 600 !important;
+}
+body.light-mode .btn-retract:hover {
+    background: rgba(180, 100, 0, 0.18) !important;
+    border-color: rgba(160, 80, 0, 0.7) !important;
+    color: #6a3600 !important;
+}
+
 /* ── BADGES ── */
 body.light-mode .badge-warning  { color: #5a2e00 !important; }
 body.light-mode .badge-danger   { color: #fff !important; }

@@ -15,12 +15,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('static/images/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     z-index: -2;
-    filter: brightness(0.55);
 }
 
 body::after {
@@ -558,18 +553,16 @@ hr {
 
 .code-editor-wrapper {
     position: relative;
+    display: flex;
     background: rgba(30, 30, 30, 0.95);
 }
 
 .line-numbers {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
+    flex-shrink: 0;
     width: 45px;
     background: rgba(30, 30, 30, 0.95);
     border-right: 1px solid #333;
-    padding: 15px 5px;
+    padding: 15px 8px 15px 5px;
     text-align: right;
     color: #858585;
     font-family: 'Courier New', Courier, monospace;
@@ -582,16 +575,17 @@ hr {
 .code-editor {
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
-    background-color: rgba(30, 30, 30, 0.95);
+    background-color: transparent;
     color: #d4d4d4;
     border: none;
-    padding: 15px 15px 15px 55px;
+    padding: 15px 15px 15px 12px;
     min-height: 300px;
     resize: vertical;
     width: 100%;
     line-height: 1.5;
     tab-size: 4;
     outline: none;
+    flex: 1;
 }
 
 .code-editor::placeholder {

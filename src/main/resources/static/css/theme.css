@@ -80,7 +80,7 @@
 
 /* ── LIGHT MODE CSS VARIABLE OVERRIDES ──────────────────────── */
 body.light-mode {
-    --cm-bg-base:          #e8eef8;
+    --cm-bg-base:          #e8e8ec;
     --cm-card-bg:          linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(240,248,255,0.96) 100%);
     --cm-card-border:      rgba(100,150,230,0.2);
     --cm-card-shadow:      0 4px 20px rgba(80,120,200,0.1);
@@ -225,13 +225,13 @@ hr { border-color: var(--cm-hr) !important; }
 
 /* ── BACKGROUND ── */
 body.light-mode {
-    background-color: #e8eef8 !important;
+    background-color: #e8e8ec !important;
 }
 
 body.light-mode::before {
     background:
             radial-gradient(ellipse 80% 70% at 50% 40%, rgba(100,160,255,0.08) 0%, rgba(150,200,255,0.04) 40%, transparent 70%),
-            linear-gradient(160deg, #d8e6f6 0%, #e2edf8 35%, #eaf3fc 60%, #ddeaf6 100%) !important;
+            linear-gradient(160deg, #d8d8de 0%, #e0e0e6 35%, #e8e8ec 60%, #dcdce2 100%) !important;
     animation: none !important;
     opacity: 1 !important;
     filter: none !important;

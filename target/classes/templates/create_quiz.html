@@ -17,6 +17,7 @@
     <link th:href="@{/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css}" rel="stylesheet">
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link th:href="@{/css/teacher-dashboard.css}" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
 
     <style>
         /* ── BASE RESET ── */
@@ -296,8 +297,13 @@
             });
             requestAnimationFrame(draw);
         }
+
+        /* Expose particles for theme switching */
+        window.__cmParticles = particles;
+        window.__cmConnColor = 'rgba(60,130,255,';
         draw();
     })();
 </script>
+<script th:src="@{/js/theme.js}"></script>
 </body>
 </html>

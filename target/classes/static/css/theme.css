@@ -757,3 +757,33 @@ body.light-mode table thead td {
     border-color: rgba(100, 150, 220, 0.15) !important;
     text-shadow: none !important;
 }
+
+/* ===================================================================
+   LIGHT MODE — STAT CARD NUMBERS VISIBILITY FIX
+   =================================================================== */
+
+body.light-mode .card h2,
+body.light-mode .card h3,
+body.light-mode .card h4,
+body.light-mode .card .h2,
+body.light-mode .card .h3,
+body.light-mode .card .h4,
+body.light-mode .card-body h2,
+body.light-mode .card-body h3,
+body.light-mode .card-body h4,
+body.light-mode .card-body .display-4,
+body.light-mode .card-body [class*="display-"],
+body.light-mode .card-body .stat-number,
+body.light-mode .card-body .count,
+body.light-mode .card-body strong,
+body.light-mode .card-body b {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+}
+
+/* Catch any large number text that might be a span or p */
+body.light-mode .card-body p,
+body.light-mode .card-body span:not(.badge) {
+    color: #1a2a4a !important;
+    text-shadow: none !important;
+}
